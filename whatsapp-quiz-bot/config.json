@@ -1,0 +1,23 @@
+{
+  "quiz": {
+    "answerTimeoutMinutes": 2,
+    "showLeaderboard": true,
+    "leaderboardPosition": "after_quiz"
+  },
+  "schedule": {
+    "enabled": true,
+    "time": "09:00",
+    "days": ["monday", "tuesday", "wednesday", "thursday", "friday"],
+    "timezone": "Asia/Kolkata"
+  },
+  "messages": {
+    "quizStart": "🐍 *Python Quiz*\n\n",
+    "quizEnd": "\n⏱️ Time's up!\n",
+    "correctAnswer": "✅ Correct answer: ",
+    "alreadyAnswered": "You have already answered this question!",
+    "leaderboardTitle": "\n🏆 *Leaderboard*\n\n"
+  },
+  "groups": {
+    "allowedGroups": []
+  }
+}

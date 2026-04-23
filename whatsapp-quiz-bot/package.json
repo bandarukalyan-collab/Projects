@@ -1,0 +1,16 @@
+{
+  "name": "whatsapp-quiz-bot",
+  "version": "1.0.0",
+  "description": "WhatsApp Quiz Bot for Python questions",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "whatsapp-web.js": "^1.23.0",
+    "qrcode-terminal": "^0.12.0",
+    "sqlite3": "^5.1.7",
+    "node-schedule": "^2.1.1",
+    "qrcode": "^1.5.3"
+  }
+}

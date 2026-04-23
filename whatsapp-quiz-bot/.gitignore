@@ -1,0 +1,16 @@
+# WhatsApp session data
+.wwebjs_auth/
+.wwebjs_cache/
+
+# Dependencies
+node_modules/
+
+# Database file (contains user data)
+quizbot.db
+
+# Temporary QR code
+qrcode.png
+
+# OS files
+.DS_Store
+Thumbs.db
