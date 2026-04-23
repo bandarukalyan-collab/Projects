@@ -1,5 +1,6 @@
 import yt_dlp
 import json
+import time
 
 def extract_transcript(video_url):
     try:
@@ -24,6 +25,7 @@ def extract_transcript(video_url):
                 for lang in ['en', 'en-US', 'en-GB']:
                     if lang in info['subtitles']:
                         sub_url = info['subtitles'][lang][0]['url']
+                        time.sleep(1)  # Rate limit delay
                         response = ydl.urlopen(sub_url)
                         content = response.read()
                         try:
@@ -43,6 +45,7 @@ def extract_transcript(video_url):
                 for lang in ['en', 'en-US', 'en-GB']:
                     if lang in info['automatic_captions']:
                         sub_url = info['automatic_captions'][lang][0]['url']
+                        time.sleep(1)  # Rate limit delay
                         response = ydl.urlopen(sub_url)
                         content = response.read()
                         try:
@@ -60,4 +63,7 @@ def extract_transcript(video_url):
             
             return {'error': 'No transcript available', 'metadata': metadata}
     except Exception as e:
-        return {'error': str(e), 'metadata': {'title': 'Error', 'duration': 0, 'description': '', 'url': video_url}}
+        error_msg = str(e)
+        if '429' in error_msg:
+            return {'error': 'YouTube rate limit hit. Please wait a few minutes and try again.', 'metadata': metadata}
+        return {'error': error_msg, 'metadata': {'title': 'Error', 'duration': 0, 'description': '', 'url': video_url}}

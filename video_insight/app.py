@@ -1,5 +1,6 @@
 import streamlit as st
 import json
+import time
 from transcript_extractor import extract_transcript
 
 st.set_page_config(page_title="VideoInsight", page_icon="🎥")
@@ -22,15 +23,10 @@ if mode == "Single URL":
                 st.text_area("Transcript", result['transcript'], height=400)
                 
                 # Export
-                export_format = st.selectbox("Export as", ["TXT", "JSON", "Markdown"])
-                if st.button("Download"):
-                    if export_format == "TXT":
-                        st.download_button("Download TXT", result['transcript'], "transcript.txt")
-                    elif export_format == "JSON":
-                        st.download_button("Download JSON", json.dumps(result, indent=2), "transcript.json")
-                    else:
-                        md = f"# {result['metadata']['title']}\n\n{result['transcript']}"
-                        st.download_button("Download MD", md, "transcript.md")
+                st.download_button("Download TXT", result['transcript'], "transcript.txt")
+                st.download_button("Download JSON", json.dumps(result, indent=2), "transcript.json")
+                md = f"# {result['metadata']['title']}\n\n{result['transcript']}"
+                st.download_button("Download MD", md, "transcript.md")
         else:
             st.warning("Enter URL")
 else:
@@ -45,6 +41,7 @@ else:
                 for url in url_list:
                     result = extract_transcript(url)
                     results.append(result)
+                    time.sleep(2)  # Delay between batch requests
                 st.success(f"Extracted {len(results)} videos")
                 for i, r in enumerate(results):
                     if 'error' not in r:
