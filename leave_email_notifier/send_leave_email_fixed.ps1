@@ -7,12 +7,12 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $python = "c:/Windsurf-Test/.venv/Scripts/python.exe"
-$script = "c:/Windsurf-Test/projects/leave_email_notifier/daily_leave_email.py"
-$log = "c:/Windsurf-Test/projects/leave_email_notifier/logs/send_leave_email.log"
+$script = "c:/Windsurf-Test/leave_email_notifier/daily_leave_email.py"
+$log = "c:/Windsurf-Test/leave_email_notifier/logs/send_leave_email.log"
 
 # Ensure logs directory exists
-if (!(Test-Path "c:/Windsurf-Test/projects/leave_email_notifier/logs")) {
-    New-Item -ItemType Directory -Path "c:/Windsurf-Test/projects/leave_email_notifier/logs" -Force
+if (!(Test-Path "c:/Windsurf-Test/leave_email_notifier/logs")) {
+    New-Item -ItemType Directory -Path "c:/Windsurf-Test/leave_email_notifier/logs" -Force
 }
 
 function Log([string]$message) {
