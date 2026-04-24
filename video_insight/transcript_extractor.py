@@ -4,7 +4,7 @@ import time
 import os
 import tempfile
 
-def extract_transcript(video_url, api_key=None):
+def extract_transcript(video_url, api_key=None, cookie_file=None):
     try:
         # Add delay to avoid bot detection
         time.sleep(2)
@@ -23,6 +23,10 @@ def extract_transcript(video_url, api_key=None):
             'outtmpl': os.path.join(temp_dir, '%(id)s.%(ext)s'),
             'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         }
+        
+        # Add cookie file if provided
+        if cookie_file and os.path.exists(cookie_file):
+            ydl_opts['cookiefile'] = cookie_file
         
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(video_url, download=False)
