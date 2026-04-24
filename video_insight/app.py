@@ -1,9 +1,24 @@
 import streamlit as st
 import json
 import time
+import re
 from transcript_extractor import extract_transcript
 
 st.set_page_config(page_title="VideoInsight", page_icon="🎥", layout="wide")
+
+# Initialize session state
+if 'single_result' not in st.session_state:
+    st.session_state.single_result = None
+if 'batch_results' not in st.session_state:
+    st.session_state.batch_results = None
+
+# Function to sanitize filename
+def sanitize_filename(title):
+    # Remove special characters and replace spaces with underscores
+    sanitized = re.sub(r'[^\w\s-]', '', title)
+    sanitized = re.sub(r'[-\s]+', '_', sanitized)
+    # Limit to 20 characters
+    return sanitized[:20]
 
 # Custom CSS for styling
 st.markdown("""
@@ -72,21 +87,29 @@ if mode == "Single URL":
                 if 'error' in result:
                     st.error(result['error'])
                 else:
+                    st.session_state.single_result = result
                     st.success(f"Extracted: {result['metadata']['title']}")
-                    st.write(f"**Duration:** {result['metadata']['duration']}s | **URL:** {result['metadata']['url']}")
-                    st.text_area("Transcript", result['transcript'], height=400, key="single_transcript")
-                    
-                    st.markdown("### Download Options")
-                    col1, col2, col3 = st.columns(3)
-                    with col1:
-                        st.download_button("TXT", result['transcript'], "transcript.txt", use_container_width=True, key="dl_txt")
-                    with col2:
-                        st.download_button("JSON", json.dumps(result, indent=2), "transcript.json", use_container_width=True, key="dl_json")
-                    with col3:
-                        md = f"# {result['metadata']['title']}\n\n{result['transcript']}"
-                        st.download_button("MD", md, "transcript.md", use_container_width=True, key="dl_md")
             else:
                 st.warning("Enter URL")
+    
+    # Display result from session state if available
+    if st.session_state.single_result:
+        result = st.session_state.single_result
+        st.write(f"**Duration:** {result['metadata']['duration']}s | **URL:** {result['metadata']['url']}")
+        st.text_area("Transcript", result['transcript'], height=400, key="single_transcript")
+        
+        # Generate filename from video title
+        safe_title = sanitize_filename(result['metadata']['title'])
+        
+        st.markdown("### Download Options")
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            st.download_button("TXT", result['transcript'], f"{safe_title}_transcript.txt", use_container_width=True, key="dl_txt")
+        with col2:
+            st.download_button("JSON", json.dumps(result, indent=2), f"{safe_title}_transcript.json", use_container_width=True, key="dl_json")
+        with col3:
+            md = f"# {result['metadata']['title']}\n\n{result['transcript']}"
+            st.download_button("MD", md, f"{safe_title}_transcript.md", use_container_width=True, key="dl_md")
 else:
     urls = st.text_area("YouTube URLs (one per line, max 5)", height=150, key="batch_urls")
     if st.button("Batch Extract", key="extract_batch"):
@@ -102,8 +125,15 @@ else:
                         results.append(result)
                         progress_bar.progress((i + 1) / len(url_list))
                         time.sleep(2)  # Delay between batch requests
+                    st.session_state.batch_results = results
                     st.success(f"Extracted {len(results)} videos")
-                    for i, r in enumerate(results):
-                        if 'error' not in r:
-                            with st.expander(f"{i+1}. {r['metadata']['title']} ({len(r['transcript'])} chars)"):
-                                st.text_area("Transcript", r['transcript'], height=200, key=f"batch_{i}")
+    
+    # Display batch results from session state if available
+    if st.session_state.batch_results:
+        for i, r in enumerate(st.session_state.batch_results):
+            if 'error' not in r:
+                safe_title = sanitize_filename(r['metadata']['title'])
+                with st.expander(f"{i+1}. {r['metadata']['title']} ({len(r['transcript'])} chars)"):
+                    st.text_area("Transcript", r['transcript'], height=200, key=f"batch_{i}")
+                    st.download_button("TXT", r['transcript'], f"{safe_title}_transcript.txt", key=f"batch_dl_txt_{i}")
+                    st.download_button("JSON", json.dumps(r, indent=2), f"{safe_title}_transcript.json", key=f"batch_dl_json_{i}")
