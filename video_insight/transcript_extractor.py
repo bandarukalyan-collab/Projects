@@ -6,6 +6,9 @@ import tempfile
 
 def extract_transcript(video_url, api_key=None):
     try:
+        # Add delay to avoid bot detection
+        time.sleep(2)
+        
         # Download subtitles to temp file
         temp_dir = tempfile.mkdtemp()
         
@@ -18,6 +21,7 @@ def extract_transcript(video_url, api_key=None):
             'subtitleslangs': ['en', 'en-US', 'en-GB'],
             'subtitlesformat': 'json',
             'outtmpl': os.path.join(temp_dir, '%(id)s.%(ext)s'),
+            'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         }
         
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -144,4 +148,6 @@ def extract_transcript(video_url, api_key=None):
         error_msg = str(e)
         if '429' in error_msg:
             return {'error': 'YouTube rate limit hit. Please wait a few minutes and try again.', 'metadata': metadata}
+        if 'bot' in error_msg.lower() or 'sign in' in error_msg.lower():
+            return {'error': 'YouTube bot protection detected. Please try again in a few minutes, or manually export cookies from your browser.', 'metadata': {'title': 'Error', 'duration': 0, 'description': '', 'url': video_url}}
         return {'error': f'Error: {error_msg}', 'metadata': {'title': 'Error', 'duration': 0, 'description': '', 'url': video_url}}
