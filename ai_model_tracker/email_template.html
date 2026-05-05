@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        body { font-family: Arial, sans-serif; font-size: 14px; line-height: 1.6; color: #333; }
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+        .header { background: #2563eb; color: white; padding: 20px; border-radius: 8px 8px 0 0; }
+        .header h1 { margin: 0; font-size: 24px; }
+        .header p { margin: 5px 0 0 0; opacity: 0.9; }
+        .content { background: white; padding: 20px; border: 1px solid #e5e5e5; border-top: none; border-radius: 0 0 8px 8px; }
+        .section { margin-bottom: 30px; }
+        .section h2 { margin: 0 0 15px 0; font-size: 20px; color: #1e40af; border-bottom: 2px solid #e5e5e5; padding-bottom: 10px; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        th { background: #f8fafc; color: #1e293b; font-weight: 600; text-align: left; padding: 12px 10px; border: 1px solid #e5e5e5; }
+        td { padding: 10px; border: 1px solid #e5e5e5; color: #334155; }
+        tr:nth-child(even) { background: #f8fafc; }
+        .footer { text-align: center; margin-top: 20px; padding: 15px; color: #64748b; font-size: 12px; border-top: 1px solid #e5e5e5; }
+        .changes { background: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; margin: 20px 0; border-radius: 4px; }
+        .changes h3 { margin: 0 0 10px 0; color: #92400e; font-size: 16px; }
+        .changes ul { margin: 0; padding-left: 20px; }
+        .changes li { color: #92400e; margin: 5px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>AI Model Tracker - Daily Update</h1>
+            <p>Date: {date}</p>
+        </div>
+        <div class="content">
+            <div class="section">
+                <h2>🌐 AI Platforms (General Use)</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Platform / Tool</th>
+                            <th>Type</th>
+                            <th>Latest Model</th>
+                            <th>Best For</th>
+                            <th>Context Window</th>
+                            <th>Max Output</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {platforms_table}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="section">
+                <h2>💻 AI Coding & Agent Tools</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Platform / Tool</th>
+                            <th>Type</th>
+                            <th>Latest Model</th>
+                            <th>Best For</th>
+                            <th>Context Window</th>
+                            <th>Max Output</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {coding_tools_table}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="footer">
+            <p>AI Model Tracker - Automated Daily Check</p>
+            <p>To unsubscribe, contact the administrator</p>
+        </div>
+    </div>
+</body>
+</html>
