@@ -51,6 +51,3 @@ config/
 
 # Python virtual environment
 pyvenv.cfg
-
-# Duplicate content (exists in separate Python repo)
-python study material/
