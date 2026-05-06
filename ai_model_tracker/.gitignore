@@ -2,6 +2,9 @@
 email_preview.html
 ai_models_state.json
 
+# Config (contains sensitive credentials)
+config.json
+
 # Python
 __pycache__/
 *.py[cod]

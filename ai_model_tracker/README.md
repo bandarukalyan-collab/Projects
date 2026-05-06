@@ -21,6 +21,11 @@ pip install -r requirements.txt
 
 ## Configuration
 
+Copy the example config file and edit it:
+```bash
+cp config.example.json config.json
+```
+
 Edit `config.json` to set up email settings:
 
 ```json
@@ -101,10 +106,11 @@ The email contains two sections:
 ## Files
 
 - `ai_tracker.py` - Main Python script
-- `config.json` - Email configuration
+- `config.example.json` - Example email configuration (copy to config.json)
+- `config.json` - Email configuration (not in repo, create from example)
 - `email_template.html` - HTML email template
-- `ai_models_state.json` - Saved state (auto-generated)
-- `email_preview.html` - Email preview (auto-generated)
+- `ai_models_state.json` - Saved state (auto-generated, not in repo)
+- `email_preview.html` - Email preview (auto-generated, not in repo)
 
 ## Notes
 
