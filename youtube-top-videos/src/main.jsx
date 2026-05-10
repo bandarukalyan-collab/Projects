@@ -2,9 +2,12 @@ import React, { useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
   CalendarClock,
+  Download,
   Eye,
+  FileText,
   Heart,
   MessageCircle,
+  Presentation,
   Play,
   Sparkles,
   Search,
@@ -38,6 +41,7 @@ function App() {
   const [activeVideoId, setActiveVideoId] = useState(null);
   const [sortMode, setSortMode] = useState('views');
   const [loading, setLoading] = useState('');
+  const [exportLoading, setExportLoading] = useState('');
   const [error, setError] = useState('');
   const [summaryByVideoId, setSummaryByVideoId] = useState({});
   const [summaryError, setSummaryError] = useState('');
@@ -141,6 +145,20 @@ function App() {
       setSummaryError(err.message);
     } finally {
       setLoading('');
+    }
+  }
+
+  async function exportActiveSummary(format) {
+    if (!activeVideo || !summaryByVideoId[activeVideo.id]) return;
+
+    setSummaryError('');
+    setExportLoading(format);
+    try {
+      await downloadSummaryFile(format, activeVideo, summaryByVideoId[activeVideo.id]);
+    } catch (err) {
+      setSummaryError(err.message);
+    } finally {
+      setExportLoading('');
     }
   }
 
@@ -288,7 +306,11 @@ function App() {
                 </div>
                 {summaryError && <p className="summary-error">{summaryError}</p>}
                 {summaryByVideoId[activeVideo.id] && (
-                  <SummaryPanel summary={summaryByVideoId[activeVideo.id]} />
+                  <SummaryPanel
+                    exportLoading={exportLoading}
+                    onExport={exportActiveSummary}
+                    summary={summaryByVideoId[activeVideo.id]}
+                  />
                 )}
               </div>
             </article>
@@ -328,12 +350,28 @@ function App() {
   );
 }
 
-function SummaryPanel({ summary }) {
+function SummaryPanel({ exportLoading, onExport, summary }) {
   return (
     <section className="summary-panel" aria-label="AI video summary">
-      <div>
-        <p className="eyebrow">AI summary</p>
-        <p className="summary-text">{summary.shortSummary}</p>
+      <div className="summary-panel-head">
+        <div>
+          <p className="eyebrow">AI summary</p>
+          <p className="summary-text">{summary.shortSummary}</p>
+        </div>
+        <div className="export-actions" aria-label="Export summary">
+          <button type="button" onClick={() => onExport('pdf')} disabled={Boolean(exportLoading)}>
+            <Download size={16} aria-hidden="true" />
+            {exportLoading === 'pdf' ? 'PDF' : 'PDF'}
+          </button>
+          <button type="button" onClick={() => onExport('pptx')} disabled={Boolean(exportLoading)}>
+            <Presentation size={16} aria-hidden="true" />
+            {exportLoading === 'pptx' ? 'PPT' : 'PPT'}
+          </button>
+          <button type="button" onClick={() => onExport('docx')} disabled={Boolean(exportLoading)}>
+            <FileText size={16} aria-hidden="true" />
+            {exportLoading === 'docx' ? 'DOCX' : 'DOCX'}
+          </button>
+        </div>
       </div>
 
       <div className="summary-grid">
@@ -385,6 +423,37 @@ async function fetchJson(url, options) {
   const data = await response.json();
   if (!response.ok) throw new Error(data.error || 'Request failed.');
   return data;
+}
+
+async function downloadSummaryFile(format, video, summary) {
+  const response = await fetch(`${apiBase}/export-summary`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ format, video, summary })
+  });
+
+  if (!response.ok) {
+    let message = 'Export failed.';
+    try {
+      const data = await response.json();
+      message = data.error || message;
+    } catch {
+      // Keep default message when the response is not JSON.
+    }
+    throw new Error(message);
+  }
+
+  const blob = await response.blob();
+  const disposition = response.headers.get('Content-Disposition') || '';
+  const filename = disposition.match(/filename="([^"]+)"/)?.[1] || `video-summary.${format}`;
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
 }
 
 function formatCount(value, label) {

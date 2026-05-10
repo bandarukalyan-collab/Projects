@@ -14,10 +14,12 @@
   "dependencies": {
     "@vitejs/plugin-react": "^5.1.1",
     "concurrently": "^9.2.1",
-    "vite": "^7.2.7",
+    "docx": "^9.6.1",
+    "lucide-react": "^0.561.0",
+    "pdfkit": "^0.18.0",
+    "pptxgenjs": "^4.0.1",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
-    "lucide-react": "^0.561.0"
-  },
-  "devDependencies": {}
+    "vite": "^7.2.7"
+  }
 }

@@ -3,6 +3,9 @@ import { readFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { Document, HeadingLevel, Packer, Paragraph, TextRun } from 'docx';
+import PDFDocument from 'pdfkit';
+import pptxgen from 'pptxgenjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, '..');
@@ -88,6 +91,24 @@ const server = http.createServer(async (req, res) => {
 
       const summary = await summarizeVideo(body.video);
       sendJson(res, 200, { summary });
+      return;
+    }
+
+    if (req.method === 'POST' && url.pathname === '/api/export-summary') {
+      const body = await readJsonBody(req);
+      const format = String(body?.format || '').toLowerCase();
+      if (!['pdf', 'docx', 'pptx'].includes(format)) {
+        sendJson(res, 400, { error: 'Choose PDF, DOCX, or PPTX export.' });
+        return;
+      }
+
+      if (!body?.video?.title || !body?.summary?.shortSummary) {
+        sendJson(res, 400, { error: 'Generate a summary before exporting.' });
+        return;
+      }
+
+      const file = await buildSummaryExport(format, body.video, body.summary);
+      sendBuffer(res, 200, file.buffer, file.contentType, file.filename);
       return;
     }
 
@@ -192,6 +213,168 @@ function normalizeRangeDays(value) {
   const allowedRanges = new Set([7, 15, 30, 60, 90]);
   const parsed = Number(value || 7);
   return allowedRanges.has(parsed) ? parsed : 7;
+}
+
+async function buildSummaryExport(format, video, summary) {
+  const filenameBase = slugify(video.title || 'video-summary');
+  const exportData = normalizeExportData(video, summary);
+
+  if (format === 'pdf') {
+    return {
+      buffer: await buildPdf(exportData),
+      contentType: 'application/pdf',
+      filename: `${filenameBase}-summary.pdf`
+    };
+  }
+
+  if (format === 'docx') {
+    return {
+      buffer: await buildDocx(exportData),
+      contentType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      filename: `${filenameBase}-summary.docx`
+    };
+  }
+
+  return {
+    buffer: await buildPptx(exportData),
+    contentType: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    filename: `${filenameBase}-summary.pptx`
+  };
+}
+
+function normalizeExportData(video, summary) {
+  return {
+    title: String(video.title || 'Video summary').trim(),
+    channelTitle: String(video.channelTitle || 'Unknown channel').trim(),
+    publishedAt: video.publishedAt ? new Date(video.publishedAt).toLocaleDateString('en') : '',
+    views: video.viewCount ?? null,
+    shortSummary: String(summary.shortSummary || '').trim(),
+    keyPoints: normalizeStringList(summary.keyPoints),
+    takeaways: normalizeStringList(summary.takeaways),
+    worthWatchingFor: String(summary.worthWatchingFor || '').trim(),
+    sourceNote: String(summary.sourceNote || 'Generated from YouTube title, description, and public metrics.').trim()
+  };
+}
+
+function buildPdf(data) {
+  return new Promise((resolve, reject) => {
+    const doc = new PDFDocument({ margin: 54, size: 'A4' });
+    const chunks = [];
+
+    doc.on('data', (chunk) => chunks.push(chunk));
+    doc.on('end', () => resolve(Buffer.concat(chunks)));
+    doc.on('error', reject);
+
+    doc.fontSize(22).fillColor('#7a2419').text(data.title, { lineGap: 4 });
+    doc.moveDown(0.4);
+    doc.fontSize(10).fillColor('#68645d').text(buildMetaLine(data));
+    doc.moveDown(1);
+    doc.fontSize(13).fillColor('#171717').text(data.shortSummary, { lineGap: 4 });
+    writePdfList(doc, 'Key points', data.keyPoints);
+    writePdfList(doc, 'Takeaways', data.takeaways);
+
+    if (data.worthWatchingFor) {
+      doc.moveDown(0.8);
+      doc.fontSize(14).fillColor('#123d63').text('Worth watching for');
+      doc.moveDown(0.25);
+      doc.fontSize(11).fillColor('#171717').text(data.worthWatchingFor, { lineGap: 3 });
+    }
+
+    doc.moveDown(1);
+    doc.fontSize(9).fillColor('#786f67').text(data.sourceNote);
+    doc.end();
+  });
+}
+
+function writePdfList(doc, title, items) {
+  if (!items.length) return;
+  doc.moveDown(0.9);
+  doc.fontSize(14).fillColor('#123d63').text(title);
+  doc.moveDown(0.25);
+  doc.fontSize(11).fillColor('#171717');
+  items.forEach((item) => {
+    doc.text(`- ${item}`, { lineGap: 3 });
+  });
+}
+
+async function buildDocx(data) {
+  const doc = new Document({
+    sections: [
+      {
+        children: [
+          new Paragraph({ text: data.title, heading: HeadingLevel.TITLE }),
+          new Paragraph({ text: buildMetaLine(data) }),
+          new Paragraph({ text: '' }),
+          new Paragraph({
+            children: [new TextRun({ text: data.shortSummary })]
+          }),
+          new Paragraph({ text: 'Key points', heading: HeadingLevel.HEADING_1 }),
+          ...data.keyPoints.map((item) => new Paragraph({ text: item, bullet: { level: 0 } })),
+          new Paragraph({ text: 'Takeaways', heading: HeadingLevel.HEADING_1 }),
+          ...data.takeaways.map((item) => new Paragraph({ text: item, bullet: { level: 0 } })),
+          new Paragraph({ text: 'Worth watching for', heading: HeadingLevel.HEADING_1 }),
+          new Paragraph({ text: data.worthWatchingFor || 'Not provided.' }),
+          new Paragraph({ text: '' }),
+          new Paragraph({ text: data.sourceNote })
+        ]
+      }
+    ]
+  });
+
+  return Packer.toBuffer(doc);
+}
+
+async function buildPptx(data) {
+  const pptx = new pptxgen();
+  pptx.layout = 'LAYOUT_WIDE';
+  pptx.author = 'YouTube Top Videos';
+  pptx.subject = 'AI video summary';
+  pptx.title = data.title;
+  pptx.company = 'YouTube Top Videos';
+  pptx.lang = 'en-US';
+  pptx.theme = {
+    headFontFace: 'Aptos Display',
+    bodyFontFace: 'Aptos',
+    lang: 'en-US'
+  };
+
+  const titleSlide = pptx.addSlide();
+  addSlideTitle(titleSlide, data.title);
+  titleSlide.addText(buildMetaLine(data), { x: 0.65, y: 1.65, w: 11.1, h: 0.35, fontSize: 13, color: '68645d' });
+  titleSlide.addText(data.shortSummary, { x: 0.65, y: 2.25, w: 11.1, h: 2.2, fontSize: 20, color: '171717', fit: 'shrink' });
+  titleSlide.addText(data.sourceNote, { x: 0.65, y: 6.65, w: 11.1, h: 0.3, fontSize: 9, color: '786f67' });
+
+  const pointsSlide = pptx.addSlide();
+  addSlideTitle(pointsSlide, 'Key Points');
+  addPptBullets(pointsSlide, data.keyPoints, 1.45);
+
+  const takeawaysSlide = pptx.addSlide();
+  addSlideTitle(takeawaysSlide, 'Takeaways');
+  addPptBullets(takeawaysSlide, data.takeaways, 1.45);
+  if (data.worthWatchingFor) {
+    takeawaysSlide.addText('Worth watching for', { x: 0.65, y: 5.35, w: 11, h: 0.3, fontSize: 15, bold: true, color: '123d63' });
+    takeawaysSlide.addText(data.worthWatchingFor, { x: 0.65, y: 5.75, w: 11, h: 0.75, fontSize: 15, color: '171717', fit: 'shrink' });
+  }
+
+  return pptx.write({ outputType: 'nodebuffer' });
+}
+
+function addSlideTitle(slide, title) {
+  slide.background = { color: 'fffaf4' };
+  slide.addText(title, { x: 0.6, y: 0.55, w: 11.2, h: 0.75, fontSize: 28, bold: true, color: '7a2419', fit: 'shrink' });
+  slide.addShape('line', { x: 0.65, y: 1.32, w: 11, h: 0, line: { color: 'e2ae90', width: 1 } });
+}
+
+function addPptBullets(slide, items, y) {
+  const bulletText = items.length ? items.map((item) => ({ text: item, options: { bullet: { type: 'bullet' } } })) : [{ text: 'Not provided.' }];
+  slide.addText(bulletText, { x: 0.85, y, w: 10.8, h: 4.8, fontSize: 19, color: '171717', breakLine: false, fit: 'shrink', paraSpaceAfterPt: 12 });
+}
+
+function buildMetaLine(data) {
+  const parts = [data.channelTitle];
+  if (data.publishedAt) parts.push(data.publishedAt);
+  if (data.views !== null && data.views !== undefined) parts.push(`${Intl.NumberFormat('en', { notation: 'compact' }).format(data.views)} views`);
+  return parts.filter(Boolean).join(' | ');
 }
 
 async function getChannelStats(channelIds) {
@@ -335,6 +518,25 @@ function sendJson(res, status, payload) {
     'Access-Control-Allow-Origin': '*'
   });
   res.end(JSON.stringify(payload));
+}
+
+function sendBuffer(res, status, buffer, contentType, filename) {
+  res.writeHead(status, {
+    'Content-Type': contentType,
+    'Content-Length': buffer.length,
+    'Content-Disposition': `attachment; filename="${filename}"`,
+    'Access-Control-Allow-Origin': '*'
+  });
+  res.end(buffer);
+}
+
+function slugify(value) {
+  const slug = String(value)
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 70);
+  return slug || 'video-summary';
 }
 
 async function serveStatic(pathname, res) {
