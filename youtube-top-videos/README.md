@@ -62,7 +62,22 @@ http://127.0.0.1:5177
 
 ## Deploying
 
-For Render or Railway:
+The repository includes a root-level `render.yaml` blueprint for Render. It deploys this folder as a Node web service and prompts for secret API keys.
+
+### Render Blueprint
+
+1. Open [Render Blueprints](https://dashboard.render.com/blueprints).
+2. Click **New Blueprint Instance**.
+3. Connect/select `bandarukalyan-collab/Projects`.
+4. Render should detect `render.yaml`.
+5. Enter the secret values when prompted:
+   - `YOUTUBE_API_KEY`
+   - `OPENAI_API_KEY`
+6. Keep `OPENAI_MODEL` as `gpt-5.2`.
+7. Create the service and wait for deploy to finish.
+8. Share the generated `onrender.com` URL with friends.
+
+### Manual Render Setup
 
 - Build command: `npm install && npm run build`
 - Start command: `npm start`
