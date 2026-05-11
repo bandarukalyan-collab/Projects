@@ -51,3 +51,6 @@ config/
 
 # Python virtual environment
 pyvenv.cfg
+
+# Separate git repositories
+genai-sso/
