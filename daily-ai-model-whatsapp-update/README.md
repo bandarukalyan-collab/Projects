@@ -5,7 +5,7 @@ This project sends a daily AI model update to WhatsApp groups using WhatsApp Web
 ## Location
 
 ```text
-C:\Users\Kalyan Bandaru\Documents\Codex\2026-05-05\daily-ai-model-whatsapp-update
+C:\Study Materials\Projects\daily-ai-model-whatsapp-update
 ```
 
 ## Schedule
@@ -55,13 +55,13 @@ daily-ai-model-whatsapp-update/
 ## Scheduled Command
 
 ```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File "C:\Users\Kalyan Bandaru\Documents\Codex\2026-05-05\daily-ai-model-whatsapp-update\send-ai-whatsapp-update.ps1" -ChatNames "Keep Learning.."
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "C:\Study Materials\Projects\daily-ai-model-whatsapp-update\send-ai-whatsapp-update.ps1" -ChatNames "Keep Learning.."
 ```
 
 ## Manual Test Command
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File "C:\Users\Kalyan Bandaru\Documents\Codex\2026-05-05\daily-ai-model-whatsapp-update\send-ai-whatsapp-update.ps1" -ChatNames "Keep Learning.."
+powershell -NoProfile -ExecutionPolicy Bypass -File "C:\Study Materials\Projects\daily-ai-model-whatsapp-update\send-ai-whatsapp-update.ps1" -ChatNames "Keep Learning.."
 ```
 
 ## Notes

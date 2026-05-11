@@ -24,7 +24,7 @@ async function sendOnce({ attempt }) {
   if (!message) throw new Error("Missing --messageBase64");
 
   const chromePath = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
-  const userDataDir = "C:\\Users\\Kalyan Bandaru\\Documents\\Codex\\2026-05-05\\daily-ai-model-whatsapp-update\\whatsapp-chrome-profile";
+  const userDataDir = path.join(__dirname, "whatsapp-chrome-profile");
   const encodedMessage = encodeURIComponent(message);
   const url = phone
     ? `https://web.whatsapp.com/send?phone=${phone}&text=${encodedMessage}`
