@@ -607,7 +607,6 @@ def generate_html_email(changes, current_data):
             <td>{platform['latest_model']}</td>
             <td>{platform['best_for']}</td>
             <td>{platform['context_window']}</td>
-            <td>{platform['max_output']}</td>
             <td>{platform['notes']}</td>
         </tr>
         """
@@ -622,7 +621,6 @@ def generate_html_email(changes, current_data):
             <td>{tool['latest_model']}</td>
             <td>{tool['best_for']}</td>
             <td>{tool['context_window']}</td>
-            <td>{tool['max_output']}</td>
             <td>{tool['notes']}</td>
         </tr>
         """
@@ -635,12 +633,44 @@ def generate_html_email(changes, current_data):
     return html_content
 
 
-def send_email(html_content, config):
-    """Send HTML email"""
-    if not config["email_enabled"]:
-        print("Email not enabled in config")
+def send_email_outlook(html_content, config, changes):
+    """Send HTML email using Outlook COM Object (for Dell mail)"""
+    try:
+        import win32com.client
+        
+        outlook = win32com.client.Dispatch("Outlook.Application")
+        mail = outlook.CreateItem(0)  # 0 = MailItem
+        
+        mail.To = config.get("recipient_email", "")
+        if config.get("cc_email"):
+            mail.CC = config["cc_email"]
+        
+        # Dynamic subject based on changes
+        subject_prefix = config.get("subject_prefix", "AI Model Tracker Update")
+        date_str = datetime.now().strftime('%Y-%m-%d')
+        
+        if config.get("subject_include_changes", False) and changes:
+            change_count = len(changes)
+            subject = f"{subject_prefix} - {change_count} Change(s) Detected - {date_str}"
+        else:
+            subject = f"{subject_prefix} - {date_str}"
+        
+        mail.Subject = subject
+        mail.HTMLBody = html_content
+        
+        mail.Send()
+        print("Email sent successfully via Outlook")
+        return True
+    except ImportError:
+        print("Error: pywin32 not installed. Run: pip install pywin32")
         return False
-    
+    except Exception as e:
+        print(f"Error sending email via Outlook: {e}")
+        return False
+
+
+def send_email_smtp(html_content, config, changes):
+    """Send HTML email using SMTP"""
     if not config["sender_email"] or not config["sender_password"]:
         print("Sender email or password not configured")
         return False
@@ -649,7 +679,16 @@ def send_email(html_content, config):
         msg = MIMEText(html_content, 'html')
         msg['From'] = config["sender_email"]
         msg['To'] = config["recipient_email"]
-        msg['Subject'] = f"AI Model Tracker Update - {datetime.now().strftime('%Y-%m-%d')}"
+        
+        # Dynamic subject based on changes
+        subject_prefix = config.get("subject_prefix", "AI Model Tracker Update")
+        date_str = datetime.now().strftime('%Y-%m-%d')
+        
+        if config.get("subject_include_changes", False) and changes:
+            change_count = len(changes)
+            msg['Subject'] = f"{subject_prefix} - {change_count} Change(s) Detected - {date_str}"
+        else:
+            msg['Subject'] = f"{subject_prefix} - {date_str}"
         
         server = smtplib.SMTP(config["smtp_server"], config["smtp_port"])
         server.starttls()
@@ -657,11 +696,24 @@ def send_email(html_content, config):
         server.send_message(msg)
         server.quit()
         
-        print("Email sent successfully")
+        print("Email sent successfully via SMTP")
         return True
     except Exception as e:
         print(f"Error sending email: {e}")
         return False
+
+
+def send_email(html_content, config, changes):
+    """Send HTML email using configured method"""
+    if not config["email_enabled"]:
+        print("Email not enabled in config")
+        return False
+    
+    # Use Outlook if configured, otherwise use SMTP
+    if config.get("use_outlook", False):
+        return send_email_outlook(html_content, config, changes)
+    else:
+        return send_email_smtp(html_content, config, changes)
 
 
 def main():
@@ -703,7 +755,7 @@ def main():
     # Send email if enabled
     if config["email_enabled"]:
         print("\nSending email...")
-        send_email(html_content, config)
+        send_email(html_content, config, changes)
     else:
         print("\nEmail not enabled. Enable in config.json to send.")
     
