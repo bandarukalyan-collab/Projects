@@ -1,0 +1,18 @@
+services:
+  - type: web
+    runtime: node
+    name: youtube-top-videos
+    rootDir: youtube-top-videos
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: YOUTUBE_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_MODEL
+        value: gpt-5.2
+      - key: NODE_VERSION
+        value: 22
