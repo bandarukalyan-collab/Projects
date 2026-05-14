@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Python Mastery Quiz</title>
+    <link rel="stylesheet" href="styles.css?v=10" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="topbar" aria-label="Quiz overview">
+        <div class="title-block">
+          <h1>Python Mastery Quiz</h1>
+          <p class="subtitle">Theory, code output, debugging, and concept checks in one mixed practice flow.</p>
+        </div>
+        <div class="score-box">
+          <div class="stat-card question-stat">
+            <strong id="progressText">Question 1 of 7</strong>
+          </div>
+          <div class="stat-card score-stat">
+            <strong id="scoreText">Score 0</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="set-strip" aria-label="Quiz sets">
+        <button class="set-chip active" data-set="0">
+          <span>Set 1</span>
+          <strong>Foundation Mix</strong>
+        </button>
+        <button class="set-chip" data-set="1">
+          <span>Set 2</span>
+          <strong>Function Power</strong>
+        </button>
+        <button class="set-chip" data-set="2">
+          <span>Set 3</span>
+          <strong>Control & Errors</strong>
+        </button>
+        <button class="set-chip" data-set="3">
+          <span>Set 4</span>
+          <strong>OOP Core</strong>
+        </button>
+        <button class="set-chip" data-set="4">
+          <span>Set 5</span>
+          <strong>Advanced Memory</strong>
+        </button>
+      </section>
+
+      <section class="quiz-panel" aria-live="polite">
+        <div class="progress-track" aria-hidden="true">
+          <div id="progressFill" class="progress-fill"></div>
+        </div>
+
+        <div class="meta-row">
+          <span id="topicTag" class="tag">Python Basics</span>
+          <span id="typeTag" class="tag muted">Theory</span>
+          <span id="difficultyTag" class="tag level-easy">Easy</span>
+        </div>
+
+        <h2 id="questionText"></h2>
+        <pre id="codeBlock" class="code-block hidden"><code></code></pre>
+        <div id="options" class="options"></div>
+
+        <div id="feedback" class="feedback hidden"></div>
+
+        <div class="actions">
+          <button id="prevBtn" class="ghost">Back</button>
+          <button id="nextBtn" class="primary">Next</button>
+        </div>
+      </section>
+
+      <section id="resultPanel" class="result-panel hidden">
+        <div class="result-content">
+          <div class="result-badge">
+            <span id="resultPercent">0%</span>
+          </div>
+          <div class="result-copy">
+            <p class="eyebrow">Session Complete</p>
+            <h2 id="finalScore"></h2>
+            <p id="finalMessage"></p>
+            <div class="result-meter" aria-hidden="true">
+              <div id="resultFill" class="result-fill"></div>
+            </div>
+            <div class="result-stats">
+              <span id="resultCorrect">0 correct</span>
+              <span id="resultTotal">7 questions</span>
+            </div>
+          </div>
+        </div>
+        <button id="restartBtn" class="primary">Restart Draft Quiz</button>
+      </section>
+    </main>
+
+    <script src="app.js?v=10"></script>
+  </body>
+</html>
