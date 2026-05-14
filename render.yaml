@@ -16,3 +16,9 @@ services:
         value: gpt-5.2
       - key: NODE_VERSION
         value: 22
+  - type: web
+    runtime: static
+    name: pyquiz-kb
+    rootDir: python-mastery-quiz
+    buildCommand: echo "No build needed"
+    staticPublishPath: .
