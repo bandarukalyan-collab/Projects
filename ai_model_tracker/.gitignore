@@ -1,6 +1,7 @@
 # Generated files
 email_preview.html
 ai_models_state.json
+change_history.json
 
 # Config (contains sensitive credentials)
 config.json

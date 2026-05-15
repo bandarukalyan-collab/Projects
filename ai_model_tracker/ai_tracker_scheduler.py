@@ -16,7 +16,7 @@ def run_tracker():
     
     try:
         # Run the AI tracker script
-        script_path = r"ai_tracker.py"
+        script_path = r"main.py"
         
         result = subprocess.run(
             ["python", script_path],
