@@ -1,6 +1,7 @@
 """Email generation and sending functions"""
 
 import smtplib
+import html
 from email.mime.text import MIMEText
 from email.utils import formatdate
 from datetime import datetime
@@ -29,51 +30,53 @@ def generate_html_email(changes, current_data, news_items=None):
     
     # Generate changes section (empty now, but keeping placeholder for compatibility)
     changes_section = ""
-    
-    # Values to filter out (placeholders from failed scrapes)
-    ignore_values = ["Unknown", "Not publicly listed", "Depends on selected model", "Varies by model", "N/A"]
+
+    hidden_from_email = {
+        "Cohere",
+        "Mistral AI",
+        "Hugging Face",
+        "Amazon Bedrock",
+        "Azure AI Foundry",
+        "OpenRouter",
+        "Tabnine",
+        "Codeium",
+    }
     
     # Generate platforms table rows with highlighting
     platforms_rows = ""
     for platform in current_data["platforms"]:
-        # Skip platforms with placeholder values in critical fields
-        latest_model = platform.get("latest_model", "")
-        if latest_model.strip() in ignore_values:
+        if platform["name"] in hidden_from_email:
             continue
-        
+
         row_class = 'changed-row' if platform['name'] in changed_items else ''
-        name_cell = f'<td class="changed-cell">{platform["name"]}</td>' if platform['name'] in changed_items else f'<td>{platform["name"]}</td>'
+        name = html.escape(platform["name"])
+        name_cell = f'<td class="changed-cell">{name}</td>' if platform['name'] in changed_items else f'<td>{name}</td>'
         
         platforms_rows += f"""
         <tr class="{row_class}">
             {name_cell}
-            <td>{platform['type']}</td>
-            <td>{platform['latest_model']}</td>
-            <td>{platform['best_for']}</td>
-            <td>{platform['context_window']}</td>
-            <td>{platform['notes']}</td>
+            <td>{html.escape(platform['latest_model'])}</td>
+            <td>{html.escape(platform['best_for'])}</td>
+            <td>{html.escape(platform['context_window'])}</td>
         </tr>
         """
     
     # Generate coding tools table rows with highlighting
     coding_tools_rows = ""
     for tool in current_data["coding_tools"]:
-        # Skip tools with placeholder values in critical fields
-        latest_model = tool.get("latest_model", "")
-        if latest_model.strip() in ignore_values:
+        if tool["name"] in hidden_from_email:
             continue
-        
+
         row_class = 'changed-row' if tool['name'] in changed_items else ''
-        name_cell = f'<td class="changed-cell">{tool["name"]}</td>' if tool['name'] in changed_items else f'<td>{tool["name"]}</td>'
+        name = html.escape(tool["name"])
+        name_cell = f'<td class="changed-cell">{name}</td>' if tool['name'] in changed_items else f'<td>{name}</td>'
         
         coding_tools_rows += f"""
         <tr class="{row_class}">
             {name_cell}
-            <td>{tool['type']}</td>
-            <td>{tool['latest_model']}</td>
-            <td>{tool['best_for']}</td>
-            <td>{tool['context_window']}</td>
-            <td>{tool['notes']}</td>
+            <td>{html.escape(tool['latest_model'])}</td>
+            <td>{html.escape(tool['best_for'])}</td>
+            <td>{html.escape(tool['context_window'])}</td>
         </tr>
         """
     
@@ -82,11 +85,10 @@ def generate_html_email(changes, current_data, news_items=None):
     if news_items and len(news_items) > 0:
         news_section = '<div class="section"><h2>Today\'s AI News</h2><ul style="list-style: none; padding: 0;">'
         for news in news_items[:10]:
-            category_display = f' <span style="background: #e0e7ff; color: #4338ca; padding: 2px 8px; border-radius: 12px; font-size: 11px; margin-left: 8px;">{news["category"]}</span>' if news.get("category") else ""
             if news["url"]:
-                news_section += f'<li style="margin-bottom: 12px; padding: 10px; background: #ffffff; border-radius: 4px;"><a href="{news["url"]}" style="color: #d97706; text-decoration: none; font-weight: 500;">{news["headline"]}</a>{category_display}</li>'
+                news_section += f'<li style="margin-bottom: 2px; padding: 1px 0; background: #ffffff;"><a href="{html.escape(news["url"], quote=True)}" style="color: #d97706; text-decoration: none; font-weight: 500;">{html.escape(news["headline"])}</a></li>'
             else:
-                news_section += f'<li style="margin-bottom: 12px; padding: 10px; background: #ffffff; border-radius: 4px;">{news["headline"]}{category_display}</li>'
+                news_section += f'<li style="margin-bottom: 2px; padding: 1px 0; background: #ffffff;">{html.escape(news["headline"])}</li>'
         news_section += '</ul></div>'
     else:
         news_section = '<div class="section"><h2>Today\'s AI News</h2><p>No AI news available at this time.</p></div>'

@@ -55,8 +55,8 @@ def log_changes(changes):
                 "timestamp": datetime.now().isoformat(),
                 "name": change["name"],
                 "field": change["field"],
-                "old_value": change.get("old_value", "N/A"),
-                "new_value": change.get("new_value", "N/A")
+                "old_value": change.get("old_value", change.get("old", "N/A")),
+                "new_value": change.get("new_value", change.get("new", "N/A"))
             })
         
         # Keep only last 100 changes
