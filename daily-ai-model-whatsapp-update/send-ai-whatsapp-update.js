@@ -11,6 +11,25 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+async function waitForWhatsAppReady({ page, readyLocator, qrCanvas, screenshotPath, startedAt }) {
+  const firstResult = await Promise.race([
+    readyLocator.waitFor({ state: "visible", timeout: 90000 }).then(() => "ready"),
+    qrCanvas.waitFor({ state: "visible", timeout: 90000 }).then(() => "qr"),
+  ]).catch(() => "timeout");
+
+  if (firstResult === "ready") return;
+
+  if (firstResult === "qr") {
+    await page.screenshot({ path: screenshotPath(`whatsapp-login-required-${startedAt}.png`), fullPage: true });
+    console.log("WhatsApp QR login detected. Waiting up to 4 minutes for login to complete...");
+    await readyLocator.waitFor({ state: "visible", timeout: 240000 });
+    console.log("WhatsApp login completed.");
+    return;
+  }
+
+  throw new Error("WhatsApp did not become ready within 90 seconds.");
+}
+
 async function sendOnce({ attempt }) {
   const phone = getArg("phone");
   const chatName = getArg("chatName");
@@ -51,19 +70,7 @@ async function sendOnce({ attempt }) {
         '[aria-label="Search input textbox"], [aria-label="Search or start a new chat"], div[contenteditable="true"][data-tab="3"]'
       ).first();
 
-      const result = await Promise.race([
-        searchBox.waitFor({ state: "visible", timeout: 90000 }).then(() => "ready"),
-        qrCanvas.waitFor({ state: "visible", timeout: 90000 }).then(() => "qr"),
-      ]).catch(() => "timeout");
-
-      if (result === "qr") {
-        await page.screenshot({ path: screenshotPath(`whatsapp-login-required-${startedAt}.png`), fullPage: true });
-        throw new Error("WhatsApp QR login is required. Scan the QR code in the automation Chrome window, then run the script again.");
-      }
-
-      if (result !== "ready") {
-        throw new Error("WhatsApp search did not become ready within 90 seconds.");
-      }
+      await waitForWhatsAppReady({ page, readyLocator: searchBox, qrCanvas, screenshotPath, startedAt });
 
       await searchBox.click();
       await page.keyboard.press(process.platform === "darwin" ? "Meta+A" : "Control+A");
@@ -103,19 +110,7 @@ async function sendOnce({ attempt }) {
 
     const sendButton = page.locator('button[aria-label="Send"], button:has(span[data-icon="send"])').last();
 
-    const result = await Promise.race([
-      sendButton.waitFor({ state: "visible", timeout: 90000 }).then(() => "ready"),
-      qrCanvas.waitFor({ state: "visible", timeout: 90000 }).then(() => "qr"),
-    ]).catch(() => "timeout");
-
-    if (result === "qr") {
-      await page.screenshot({ path: screenshotPath(`whatsapp-login-required-${startedAt}.png`), fullPage: true });
-      throw new Error("WhatsApp QR login is required. Scan the QR code in the automation Chrome window, then run the script again.");
-    }
-
-    if (result !== "ready") {
-      throw new Error("WhatsApp did not become ready to send within 90 seconds.");
-    }
+    await waitForWhatsAppReady({ page, readyLocator: sendButton, qrCanvas, screenshotPath, startedAt });
 
     if (noSend) {
       console.log("Opened WhatsApp Web with message ready. NoSend mode skipped sending.");
