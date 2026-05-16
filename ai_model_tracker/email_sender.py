@@ -83,15 +83,15 @@ def generate_html_email(changes, current_data, news_items=None):
     # Generate AI news section
     news_section = ""
     if news_items and len(news_items) > 0:
-        news_section = '<div class="section"><h2>Today\'s AI News</h2><ul style="list-style: none; padding: 0;">'
+        news_section = '<div class="section"><h2>AI News</h2><ul class="news-list">'
         for news in news_items[:10]:
             if news["url"]:
-                news_section += f'<li style="margin-bottom: 2px; padding: 1px 0; background: #ffffff;"><a href="{html.escape(news["url"], quote=True)}" style="color: #d97706; text-decoration: none; font-weight: 500;">{html.escape(news["headline"])}</a></li>'
+                news_section += f'<li><a href="{html.escape(news["url"], quote=True)}">{html.escape(news["headline"])}</a></li>'
             else:
-                news_section += f'<li style="margin-bottom: 2px; padding: 1px 0; background: #ffffff;">{html.escape(news["headline"])}</li>'
+                news_section += f'<li>{html.escape(news["headline"])}</li>'
         news_section += '</ul></div>'
     else:
-        news_section = '<div class="section"><h2>Today\'s AI News</h2><p>No AI news available at this time.</p></div>'
+        news_section = '<div class="section"><h2>AI News</h2><p>No AI news available at this time.</p></div>'
     
     # Replace placeholders
     html_content = template.replace("{date}", date_str)

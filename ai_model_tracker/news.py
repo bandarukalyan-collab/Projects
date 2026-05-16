@@ -3,7 +3,45 @@
 import html
 import re
 import xml.etree.ElementTree as ET
+from urllib.parse import urlencode
 from fetcher import fetch_url
+
+
+AI_NEWS_IMPORTANCE = {
+    "daybreak": 60,
+    "mythos": 60,
+    "mdash": 60,
+    "glasswing": 50,
+    "openclaw": 50,
+    "hermes agent": 50,
+    "cybersecurity": 35,
+    "vulnerability": 30,
+    "security": 20,
+    "agent": 25,
+    "agents": 25,
+    "autonomous": 20,
+    "coding agent": 30,
+    "openai": 20,
+    "anthropic": 20,
+    "claude": 18,
+    "microsoft": 18,
+    "deepmind": 18,
+    "gemini": 18,
+    "llama": 18,
+    "deepseek": 18,
+    "mistral": 18,
+    "hugging face": 16,
+    "model": 12,
+    "models": 12,
+    "launch": 12,
+    "launches": 12,
+    "release": 12,
+    "releases": 12,
+    "announces": 12,
+    "open source": 12,
+    "benchmark": 10,
+    "research": 8
+}
 
 
 def parse_feed_items(content):
@@ -37,6 +75,43 @@ def parse_feed_items(content):
     return items
 
 
+def clean_news_headline(value):
+    """Remove publisher suffixes from RSS headlines."""
+    title = re.sub(r"\s+", " ", html.unescape(value or "")).strip()
+    if "â" in title or "€™" in title:
+        try:
+            title = title.encode("latin1").decode("utf-8")
+        except UnicodeError:
+            pass
+    if " - " in title:
+        title = title.rsplit(" - ", 1)[0].strip()
+
+    pipe_parts = [part.strip() for part in title.split("|")]
+    if len(pipe_parts) > 1:
+        source_words = {"news", "ai", "security", "technology", "tech", "media", "sc media"}
+        kept_parts = []
+        for part in pipe_parts:
+            normalized = part.lower()
+            if normalized in source_words or normalized.endswith(" media"):
+                continue
+            kept_parts.append(part)
+        if kept_parts:
+            title = " | ".join(kept_parts).strip()
+
+    return title
+
+
+def score_news_item(item):
+    text = f"{item.get('headline', '')} {item.get('category') or ''}".lower()
+    score = 0
+    for keyword, weight in AI_NEWS_IMPORTANCE.items():
+        if keyword in text:
+            score += weight
+    if item.get("source", "").startswith("Google News"):
+        score += 2
+    return score
+
+
 def fetch_ai_news():
     """Fetch latest AI news from multiple sources and categorize"""
     news_by_source = []
@@ -44,6 +119,9 @@ def fetch_ai_news():
     
     # Multiple RSS feeds from various AI news sources
     rss_feeds = [
+        ("Google News AI", "https://news.google.com/rss/search?" + urlencode({"q": "artificial intelligence OR AI agent OR AI model when:2d", "hl": "en-US", "gl": "US", "ceid": "US:en"})),
+        ("Google News AI Cybersecurity", "https://news.google.com/rss/search?" + urlencode({"q": "AI cybersecurity OR agentic security OR vulnerability discovery AI when:7d", "hl": "en-US", "gl": "US", "ceid": "US:en"})),
+        ("Google News AI Agents", "https://news.google.com/rss/search?" + urlencode({"q": "AI agents OR autonomous AI agent OR coding agent when:7d", "hl": "en-US", "gl": "US", "ceid": "US:en"})),
         ("TechCrunch", "https://techcrunch.com/category/artificial-intelligence/feed/"),
         ("The Verge", "https://www.theverge.com/rss/index.xml"),
         ("O'Reilly Radar", "https://feeds.feedburner.com/oreilly/radar"),
@@ -62,7 +140,7 @@ def fetch_ai_news():
             source_items = []
             for title, link in parse_feed_items(content):
                 # Skip if it's a feed title (contains common feed words)
-                cleaned_title = title.strip()
+                cleaned_title = clean_news_headline(title)
                 if (cleaned_title and len(cleaned_title) > 10 and
                     "feed" not in cleaned_title.lower() and
                     "rss" not in cleaned_title.lower() and
@@ -79,28 +157,15 @@ def fetch_ai_news():
                         "source": source
                     })
                     seen_headlines.add(cleaned_title)
-                    if len(source_items) >= 5:
+                    if len(source_items) >= 20:
                         break
 
             if source_items:
                 news_by_source.append(source_items)
 
-    # Round-robin sources so one feed cannot dominate the daily top 10.
-    mixed_items = []
-    index = 0
-    while len(mixed_items) < 10:
-        added_this_round = False
-        for source_items in news_by_source:
-            if index < len(source_items):
-                mixed_items.append(source_items[index])
-                added_this_round = True
-                if len(mixed_items) >= 10:
-                    break
-        if not added_this_round:
-            break
-        index += 1
-
-    return mixed_items
+    all_items = [item for source_items in news_by_source for item in source_items]
+    all_items.sort(key=score_news_item, reverse=True)
+    return all_items[:10]
 
 
 def is_ai_related(headline):
@@ -110,7 +175,8 @@ def is_ai_related(headline):
         "ai", "artificial intelligence", "openai", "chatgpt", "claude",
         "anthropic", "gemini", "deepseek", "grok", "llama", "qwen",
         "model", "agent", "agents", "nvidia", "machine learning",
-        "neural", "robot", "automation", "codex"
+        "neural", "robot", "automation", "codex", "cybersecurity",
+        "vulnerability", "security", "mdash", "mythos", "daybreak"
     ]
     return any(keyword in headline_lower for keyword in keywords)
 
