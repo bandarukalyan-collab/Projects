@@ -11,6 +11,31 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+function messageSnippet(message) {
+  return message.split(/\r?\n/).find((line) => line.trim()).trim().slice(0, 80);
+}
+
+async function waitForOutgoingMessageToSync(page, message) {
+  const snippet = messageSnippet(message);
+
+  await page.waitForFunction(
+    (text) => {
+      const outgoingMessages = [...document.querySelectorAll('[class*="message-out"]')];
+      const messageNode = outgoingMessages.reverse().find((node) => node.innerText.includes(text));
+
+      if (!messageNode) return false;
+
+      const pendingIcons = messageNode.querySelectorAll(
+        '[data-icon="msg-time"], [data-icon="status-time"], [aria-label*="pending" i], [aria-label*="waiting" i]'
+      );
+
+      return pendingIcons.length === 0;
+    },
+    snippet,
+    { timeout: 120000 }
+  );
+}
+
 async function waitForWhatsAppReady({ page, readyLocator, qrCanvas, screenshotPath, startedAt }) {
   const firstResult = await Promise.race([
     readyLocator.waitFor({ state: "visible", timeout: 90000 }).then(() => "ready"),
@@ -102,7 +127,8 @@ async function sendOnce({ attempt }) {
       await groupSendButton.click();
       console.log(`Clicked WhatsApp send button for group: ${chatName}`);
 
-      await page.waitForTimeout(5000);
+      await waitForOutgoingMessageToSync(page, message);
+      console.log(`WhatsApp confirmed outgoing message is no longer pending for group: ${chatName}`);
       await page.screenshot({ path: screenshotPath(`whatsapp-sent-${chatName.replace(/[\\/:*?"<>|]/g, "_")}-${startedAt}.png`), fullPage: true })
         .catch((error) => console.log(`Sent, but confirmation screenshot failed: ${error.message}`));
       return;
@@ -120,7 +146,8 @@ async function sendOnce({ attempt }) {
     await sendButton.click();
     console.log("Clicked WhatsApp send button.");
 
-    await page.waitForTimeout(5000);
+    await waitForOutgoingMessageToSync(page, message);
+    console.log("WhatsApp confirmed outgoing message is no longer pending.");
     await page.screenshot({ path: screenshotPath(`whatsapp-sent-phone-${startedAt}.png`), fullPage: true })
       .catch((error) => console.log(`Sent, but confirmation screenshot failed: ${error.message}`));
   } catch (error) {
