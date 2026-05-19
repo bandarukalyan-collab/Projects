@@ -10,12 +10,13 @@ The bot should send daily AI-related questions, next-day answers, and a weekly r
 
 - Monday to Friday, 8:00 PM IST: send daily themed AI questions.
 - Tuesday to Saturday, 9:00 AM IST: send answers for the previous evening's questions.
-- Saturday: send a weekly recap of Monday-Friday themes, questions, and key takeaways.
+- Saturday, 10:00 AM IST: send a weekly recap of Monday-Friday themes, questions, and key takeaways.
 
-Suggested Saturday flow:
+Locked Saturday flow:
 
 - 9:00 AM IST: send Friday answers.
-- Later on Saturday, or combined with the 9:00 AM message: send weekly recap.
+- 10:00 AM IST: send weekly recap separately.
+- Do not combine Friday answers and weekly recap into one message.
 
 ## Daily Evening Message Format
 
@@ -213,7 +214,7 @@ Version 1 should keep things simple:
 - Avoid repeats using stored history.
 - Send Monday-Friday evening questions.
 - Send Tuesday-Saturday morning answers.
-- Send a Saturday weekly recap.
+- Send a separate Saturday 10:00 AM weekly recap.
 
 ## Example Evening Message
 
