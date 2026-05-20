@@ -1192,6 +1192,24 @@ const finalScore = document.getElementById("finalScore");
 const finalMessage = document.getElementById("finalMessage");
 const restartBtn = document.getElementById("restartBtn");
 const quizPanel = document.querySelector(".quiz-panel");
+const setStrip = document.getElementById("setStrip");
+
+function renderSetButtons() {
+  setStrip.innerHTML = "";
+
+  quizSets.forEach((set, index) => {
+    const button = document.createElement("button");
+    button.className = `set-chip${index === currentSetIndex ? " active" : ""}`;
+    button.dataset.set = String(index);
+    button.innerHTML = `<span>Set ${index + 1}</span><strong>${set.name}</strong>`;
+    button.addEventListener("click", () => {
+      currentSetIndex = index;
+      renderSetButtons();
+      restartQuiz();
+    });
+    setStrip.appendChild(button);
+  });
+}
 
 function renderQuestion() {
   const question = activeQuestions[currentIndex];
@@ -1300,15 +1318,6 @@ function restartQuiz() {
   renderQuestion();
 }
 
-document.querySelectorAll(".set-chip[data-set]").forEach(button => {
-  button.addEventListener("click", () => {
-    currentSetIndex = Number(button.dataset.set);
-    document.querySelectorAll(".set-chip[data-set]").forEach(item => item.classList.remove("active"));
-    button.classList.add("active");
-    restartQuiz();
-  });
-});
-
 prevBtn.addEventListener("click", () => {
   if (currentIndex > 0) {
     currentIndex -= 1;
@@ -1329,4 +1338,5 @@ restartBtn.addEventListener("click", () => {
   restartQuiz();
 });
 
+renderSetButtons();
 renderQuestion();
