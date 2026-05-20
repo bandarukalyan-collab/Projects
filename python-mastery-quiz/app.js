@@ -1223,7 +1223,7 @@ function renderQuestion() {
   typeTag.textContent = question.type;
   difficultyTag.textContent = question.difficulty;
   difficultyTag.className = `tag level-${question.difficulty.toLowerCase()}`;
-  questionText.textContent = question.question;
+  questionText.textContent = `${currentIndex + 1}. ${question.question}`;
 
   if (question.code) {
     codeText.textContent = question.code;
