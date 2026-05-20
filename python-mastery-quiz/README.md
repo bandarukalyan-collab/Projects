@@ -4,8 +4,8 @@ An interactive web-based quiz application for testing Python knowledge across va
 
 ## Features
 
-- **5 Quiz Sets**: Foundation Mix, Function Power, Control & Errors, OOP Core, Advanced Memory
-- **Multiple Question Types**: Theory, code output, debugging, and concept checks
+- **10 Quiz Sets**: 100 total questions across beginner, intermediate, and advanced Python topics
+- **Multiple Question Types**: Theory, code output, debugging, fill in the blank, concept comparison, scenario, and best-practice style questions
 - **Interactive UI**: Real-time feedback, progress tracking, and scoring
 - **Responsive Design**: Clean, modern interface with smooth animations
 - **Instant Results**: Score percentage, correct answers count, and performance feedback
@@ -37,11 +37,13 @@ Then open `http://localhost:8000` in your browser.
 
 ## Quiz Structure
 
-Each quiz set contains 7 questions covering:
+Each quiz set contains 10 questions covering:
 - **Theory**: Conceptual questions about Python
 - **Code Output**: Predict the output of code snippets
 - **Debugging**: Find errors in code
-- **Concept Checks**: Test understanding of Python features
+- **Fill in the Blank**: Complete missing syntax or keywords
+- **Concept Comparison**: Compare similar Python ideas
+- **Scenario**: Choose the right approach for practical situations
 
 ## Question Sets
 
@@ -50,6 +52,11 @@ Each quiz set contains 7 questions covering:
 3. **Set 3 - Control & Errors**: Control flow and exception handling
 4. **Set 4 - OOP Core**: Object-oriented programming concepts
 5. **Set 5 - Advanced Memory**: Memory management and advanced topics
+6. **Set 6 - Data Structures & Copying**: Built-in collections, dictionaries, sets, shallow copy, and deep copy
+7. **Set 7 - Scope & Runtime**: LEGB, `global`, `nonlocal`, closures, memory references, and monkey patching
+8. **Set 8 - Context & Exceptions**: Context managers, `with`, custom cleanup, and exception flow
+9. **Set 9 - Advanced OOP**: Dunder methods, static/class methods, metaclasses, inheritance, and monkey patching
+10. **Set 10 - Concurrency Challenge**: GIL, threading, multiprocessing, CPU-bound work, and I/O-bound work
 
 ## Scoring
 
