@@ -65,7 +65,7 @@ button {
 }
 
 .title-block {
-  max-width: 690px;
+  max-width: 720px;
 }
 
 .eyebrow {
@@ -95,10 +95,11 @@ h1 {
 
 .subtitle {
   color: var(--muted);
-  font-size: 15px;
-  line-height: 1.5;
+  font-size: 13px;
+  line-height: 1.35;
   margin: 10px 0 0;
-  max-width: 560px;
+  max-width: 720px;
+  white-space: nowrap;
 }
 
 h2 {
@@ -623,6 +624,10 @@ h2 {
   .score-box {
     min-width: 0;
     width: 100%;
+  }
+
+  .subtitle {
+    white-space: normal;
   }
 
   .set-strip {

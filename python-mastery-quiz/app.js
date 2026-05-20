@@ -1298,7 +1298,7 @@ function showAnswer(selected) {
 function showResults() {
   quizPanel.classList.add("hidden");
   resultPanel.classList.remove("hidden");
-  progressText.textContent = "Draft complete";
+  progressText.textContent = "Quiz Complete";
   finalScore.textContent = `You scored ${score} out of ${activeQuestions.length}`;
   const percent = Math.round((score / activeQuestions.length) * 100);
   resultFill.style.width = `${percent}%`;
@@ -1307,7 +1307,7 @@ function showResults() {
   resultTotal.textContent = `${activeQuestions.length} questions`;
   finalMessage.textContent = percent >= 75
     ? "Strong start. The mixed question style is working well for practice."
-    : "Good draft run. Review the explanations and retry to strengthen weak areas.";
+    : "Good quiz run. Review the explanations and retry to strengthen weak areas.";
 }
 
 function restartQuiz() {
