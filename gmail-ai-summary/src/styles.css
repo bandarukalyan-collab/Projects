@@ -15,7 +15,7 @@ body {
   margin: 0;
   min-width: 320px;
   background:
-    linear-gradient(135deg, #eee4f4 0%, #f7e9ee 58%, #f2e2eb 100%);
+    linear-gradient(135deg, #fff7f0 0%, #f7f9ff 48%, #f3fbf6 100%);
 }
 
 button,
@@ -31,9 +31,9 @@ button {
   min-height: 100vh;
   padding: 16px 24px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.36) 0%, rgba(255, 255, 255, 0.08) 44%, rgba(255, 255, 255, 0) 100%),
-    repeating-linear-gradient(90deg, rgba(100, 55, 151, 0.026) 0, rgba(100, 55, 151, 0.026) 1px, transparent 1px, transparent 86px),
-    repeating-linear-gradient(0deg, rgba(100, 55, 151, 0.018) 0, rgba(100, 55, 151, 0.018) 1px, transparent 1px, transparent 86px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.62) 0%, rgba(255, 255, 255, 0.2) 42%, rgba(255, 255, 255, 0) 100%),
+    repeating-linear-gradient(90deg, rgba(18, 61, 99, 0.02) 0, rgba(18, 61, 99, 0.02) 1px, transparent 1px, transparent 84px),
+    repeating-linear-gradient(0deg, rgba(185, 35, 24, 0.014) 0, rgba(185, 35, 24, 0.014) 1px, transparent 1px, transparent 84px),
     transparent;
 }
 
@@ -52,13 +52,13 @@ button {
   align-items: center;
   margin-bottom: 14px;
   padding: 18px 20px;
-  border: 1px solid rgba(111, 60, 157, 0.22);
+  border: 1px solid rgba(226, 174, 144, 0.62);
   border-radius: 8px;
   background:
-    linear-gradient(135deg, #f4e9f8 0%, #efe3f6 48%, #f8e8ee 100%),
-    #f2e6f4;
+    linear-gradient(135deg, rgba(255, 252, 248, 0.92), rgba(239, 246, 255, 0.86)),
+    #fff;
   box-shadow:
-    0 22px 60px rgba(70, 38, 112, 0.1),
+    0 22px 60px rgba(121, 73, 42, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.82);
   text-align: center;
 }
@@ -106,12 +106,12 @@ button {
   min-height: 38px;
   padding: 0 16px;
   border-radius: 7px;
-  background: linear-gradient(135deg, #7b3fb2, #5f2d91);
+  background: linear-gradient(135deg, #1a73e8, #174ea6);
   color: #fff;
   font-size: 14px;
   font-weight: 850;
   text-decoration: none;
-  box-shadow: 0 12px 28px rgba(95, 45, 145, 0.18);
+  box-shadow: 0 12px 28px rgba(26, 115, 232, 0.16);
 }
 
 .status-pill {
@@ -129,18 +129,18 @@ button {
 }
 
 .status-pill.is-connected {
-  border-color: rgba(95, 45, 145, 0.22);
-  background: rgba(255, 255, 255, 0.42);
-  color: #4d2577;
+  border-color: #bfe4c8;
+  background: #f0fbf4;
+  color: #137333;
 }
 
 .notice {
   margin-bottom: 18px;
   padding: 14px 16px;
-  border: 1px solid #d7bddf;
+  border: 1px solid #efc4be;
   border-radius: 8px;
-  background: #f8edf8;
-  color: #5f2d91;
+  background: #fff4f2;
+  color: #912018;
   font-weight: 760;
 }
 
@@ -150,13 +150,13 @@ button {
 
 .chat-panel {
   overflow: hidden;
-  border: 1px solid rgba(111, 60, 157, 0.22);
+  border: 1px solid rgba(213, 177, 154, 0.76);
   border-radius: 8px;
   background:
-    linear-gradient(180deg, #efe5f5 0%, #f8e8ee 100%),
-    #efe5f5;
+    linear-gradient(180deg, #f6f1fb 0%, #f4f8ff 100%),
+    #f4f8ff;
   box-shadow:
-    0 18px 44px rgba(70, 38, 112, 0.08),
+    0 18px 44px rgba(57, 42, 30, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.84);
 }
 
@@ -174,8 +174,8 @@ button {
   overflow: auto;
   padding: 14px;
   background:
-    linear-gradient(180deg, #eee3f5 0%, #f8e7ee 100%),
-    #eee3f5;
+    linear-gradient(180deg, #f1effb 0%, #f7f2f8 100%),
+    #f4f3fb;
 }
 
 .empty-chat {
@@ -191,8 +191,8 @@ button {
   width: 58px;
   height: 58px;
   border-radius: 999px;
-  background: linear-gradient(135deg, #f8edf8, #efe3f6);
-  box-shadow: 0 12px 30px rgba(70, 38, 112, 0.1);
+  background: linear-gradient(135deg, #fff4f2, #eef5fb);
+  box-shadow: 0 12px 30px rgba(57, 42, 30, 0.08);
 }
 
 .empty-chat h2 {
@@ -224,33 +224,33 @@ button {
   width: 34px;
   height: 34px;
   border-radius: 999px;
-  background: linear-gradient(135deg, #f8edf8, #efe3f6);
-  color: #5f2d91;
-  box-shadow: 0 8px 18px rgba(70, 38, 112, 0.08);
+  background: linear-gradient(135deg, #fff0eb, #eef5fb);
+  color: #b92318;
+  box-shadow: 0 8px 18px rgba(57, 42, 30, 0.08);
   flex: 0 0 auto;
 }
 
 .chat-turn.user .avatar {
-  background: #efe3f6;
-  color: #5f2d91;
+  background: #eaf1f8;
+  color: #123d63;
 }
 
 .bubble {
   width: min(100%, 940px);
   padding: 12px;
-  border: 1px solid rgba(111, 60, 157, 0.2);
+  border: 1px solid rgba(213, 177, 154, 0.66);
   border-radius: 8px;
-  background: rgba(255, 250, 253, 0.82);
-  color: #30283f;
+  background: rgba(255, 253, 249, 0.92);
+  color: #263848;
   line-height: 1.58;
-  box-shadow: 0 12px 28px rgba(70, 38, 112, 0.06);
+  box-shadow: 0 12px 28px rgba(57, 42, 30, 0.06);
 }
 
 .chat-turn.user .bubble {
   width: auto;
   max-width: min(86%, 620px);
-  border-color: rgba(95, 45, 145, 0.18);
-  background: linear-gradient(135deg, #efe3f6, #fbedf3);
+  border-color: rgba(18, 61, 99, 0.18);
+  background: linear-gradient(135deg, #eef5fb, #f8fbff);
 }
 
 .bubble p {
@@ -286,13 +286,13 @@ button {
 }
 
 .mail-list-head svg {
-  color: #6d35a2;
+  color: #b92318;
 }
 
 .mail-list-head small {
   overflow: hidden;
   max-width: 46%;
-  color: #6b6078;
+  color: #786f67;
   font-size: 12px;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -309,12 +309,12 @@ button {
   gap: 6px;
   min-height: 132px;
   padding: 11px;
-  border: 1px solid rgba(111, 60, 157, 0.18);
+  border: 1px solid rgba(213, 177, 154, 0.64);
   border-radius: 8px;
   background:
-    linear-gradient(180deg, rgba(255, 252, 255, 0.94), rgba(250, 241, 247, 0.92)),
-    #fffaff;
-  box-shadow: 0 10px 26px rgba(70, 38, 112, 0.06);
+    linear-gradient(180deg, rgba(255, 253, 249, 0.98), rgba(249, 252, 255, 0.94)),
+    #fffaf6;
+  box-shadow: 0 10px 26px rgba(57, 42, 30, 0.06);
   transition:
     border-color 160ms ease,
     box-shadow 160ms ease,
@@ -322,8 +322,8 @@ button {
 }
 
 .mail-card:hover {
-  border-color: rgba(95, 45, 145, 0.32);
-  box-shadow: 0 14px 34px rgba(70, 38, 112, 0.11);
+  border-color: rgba(229, 72, 50, 0.38);
+  box-shadow: 0 14px 34px rgba(57, 42, 30, 0.1);
   transform: translateY(-1px);
 }
 
@@ -336,7 +336,7 @@ button {
 
 .mail-card-top .sender {
   overflow: hidden;
-  color: #6d35a2;
+  color: #b92318;
   font-size: 13px;
   font-weight: 900;
   text-overflow: ellipsis;
@@ -348,7 +348,7 @@ button {
   gap: 4px;
   align-items: center;
   flex: 0 0 auto;
-  color: #6b6078;
+  color: #786f67;
   font-size: 12px;
 }
 
@@ -366,7 +366,7 @@ button {
 .mail-card p {
   display: -webkit-box;
   overflow: hidden;
-  color: #4b405d;
+  color: #574b43;
   font-size: 13px;
   line-height: 1.35;
   white-space: normal;
@@ -390,35 +390,35 @@ button {
   min-height: 22px;
   padding: 0 7px;
   border-radius: 999px;
-  border: 1px solid rgba(95, 45, 145, 0.12);
-  background: rgba(255, 255, 255, 0.46);
-  color: #6b6078;
+  border: 1px solid rgba(120, 111, 103, 0.16);
+  background: #f8fafc;
+  color: #667085;
   font-size: 11px;
   font-weight: 760;
 }
 
 .mail-card-footer strong {
-  border-color: rgba(95, 45, 145, 0.16);
-  background: rgba(239, 227, 246, 0.72);
-  color: #5f2d91;
+  border-color: rgba(18, 61, 99, 0.14);
+  background: #f5f8fb;
+  color: #385066;
 }
 
 .mail-card-footer .priority-chip.high {
-  border-color: rgba(95, 45, 145, 0.2);
-  background: rgba(248, 237, 248, 0.78);
-  color: #5f2d91;
+  border-color: rgba(179, 38, 30, 0.24);
+  background: #fff7f6;
+  color: #9f2f21;
 }
 
 .mail-card-footer .priority-chip.normal {
-  border-color: rgba(95, 45, 145, 0.12);
-  background: rgba(255, 255, 255, 0.46);
-  color: #6b6078;
+  border-color: rgba(18, 61, 99, 0.12);
+  background: #f7fafc;
+  color: #667085;
 }
 
 .mail-card-footer .priority-chip.low {
-  border-color: rgba(95, 45, 145, 0.12);
-  background: rgba(255, 255, 255, 0.46);
-  color: #6b6078;
+  border-color: rgba(19, 115, 51, 0.18);
+  background: #f7fbf8;
+  color: #667085;
 }
 
 .prompt-form {
@@ -426,30 +426,30 @@ button {
   grid-template-columns: 1fr auto;
   gap: 10px;
   padding: 12px 14px;
-  border-top: 1px solid rgba(111, 60, 157, 0.18);
-  background: rgba(238, 227, 246, 0.82);
+  border-top: 1px solid rgba(213, 177, 154, 0.58);
+  background: #f1effb;
 }
 
 .prompt-form input {
   min-width: 0;
   min-height: 46px;
   padding: 0 15px;
-  border: 1px solid rgba(111, 60, 157, 0.24);
+  border: 1px solid rgba(212, 127, 89, 0.36);
   border-radius: 8px;
   outline: 0;
   color: #171717;
   font-size: 15px;
-  background: rgba(255, 252, 255, 0.9);
+  background: #fffaf6;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.8),
-    0 8px 18px rgba(70, 38, 112, 0.04);
+    0 8px 18px rgba(57, 42, 30, 0.04);
 }
 
 .prompt-form input:focus {
-  border-color: rgba(95, 45, 145, 0.46);
+  border-color: rgba(229, 72, 50, 0.62);
   box-shadow:
-    0 0 0 3px rgba(95, 45, 145, 0.12),
-    0 8px 18px rgba(70, 38, 112, 0.05);
+    0 0 0 3px rgba(229, 72, 50, 0.12),
+    0 8px 18px rgba(57, 42, 30, 0.05);
 }
 
 .prompt-form button {
@@ -460,7 +460,7 @@ button {
   min-width: 96px;
   min-height: 46px;
   border-radius: 8px;
-  background: linear-gradient(135deg, #7b3fb2, #5f2d91);
+  background: linear-gradient(135deg, #e54832, #b92318);
   color: #fff;
   font-weight: 900;
 }
