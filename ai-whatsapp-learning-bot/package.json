@@ -1,0 +1,21 @@
+{
+  "name": "ai-whatsapp-learning-bot",
+  "version": "1.0.0",
+  "description": "Daily AI learning questions, answers, and weekly recaps for WhatsApp.",
+  "main": "src/index.js",
+  "scripts": {
+    "init-db": "node scripts/initDb.js",
+    "generate": "node scripts/testGenerate.js",
+    "send:questions": "node src/jobs/sendDailyQuestions.js",
+    "send:answers": "node src/jobs/sendDailyAnswers.js",
+    "send:recap": "node src/jobs/sendWeeklyRecap.js",
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "node-schedule": "^2.1.1",
+    "playwright": "^1.59.1",
+    "sqlite3": "^5.1.7"
+  }
+}
+

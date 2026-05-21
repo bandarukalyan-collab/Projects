@@ -4,18 +4,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Python Mastery Quiz</title>
-    <link rel="stylesheet" href="styles.css?v=10" />
+    <link rel="stylesheet" href="styles.css?v=13" />
   </head>
   <body>
     <main class="app-shell">
       <section class="topbar" aria-label="Quiz overview">
         <div class="title-block">
           <h1>Python Mastery Quiz</h1>
-          <p class="subtitle">Theory, code output, debugging, and concept checks in one mixed practice flow.</p>
+          <p class="subtitle">Theory, code output, debugging, comparisons, and scenario questions in one mixed practice flow.</p>
         </div>
         <div class="score-box">
           <div class="stat-card question-stat">
-            <strong id="progressText">Question 1 of 7</strong>
+            <strong id="progressText">Question 1 of 10</strong>
           </div>
           <div class="stat-card score-stat">
             <strong id="scoreText">Score 0</strong>
@@ -23,28 +23,7 @@
         </div>
       </section>
 
-      <section class="set-strip" aria-label="Quiz sets">
-        <button class="set-chip active" data-set="0">
-          <span>Set 1</span>
-          <strong>Foundation Mix</strong>
-        </button>
-        <button class="set-chip" data-set="1">
-          <span>Set 2</span>
-          <strong>Function Power</strong>
-        </button>
-        <button class="set-chip" data-set="2">
-          <span>Set 3</span>
-          <strong>Control & Errors</strong>
-        </button>
-        <button class="set-chip" data-set="3">
-          <span>Set 4</span>
-          <strong>OOP Core</strong>
-        </button>
-        <button class="set-chip" data-set="4">
-          <span>Set 5</span>
-          <strong>Advanced Memory</strong>
-        </button>
-      </section>
+      <section id="setStrip" class="set-strip" aria-label="Quiz sets"></section>
 
       <section class="quiz-panel" aria-live="polite">
         <div class="progress-track" aria-hidden="true">
@@ -87,10 +66,10 @@
             </div>
           </div>
         </div>
-        <button id="restartBtn" class="primary">Restart Draft Quiz</button>
+        <button id="restartBtn" class="primary">Restart Quiz</button>
       </section>
     </main>
 
-    <script src="app.js?v=10"></script>
+    <script src="app.js?v=13"></script>
   </body>
 </html>
