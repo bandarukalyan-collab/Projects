@@ -1169,6 +1169,8 @@ let activeQuestions = [...quizSets[currentSetIndex].questions];
 let currentIndex = 0;
 let score = 0;
 let answered = new Map();
+let wrongAnswers = [];
+let currentReviewIndex = 0;
 
 const progressText = document.getElementById("progressText");
 const progressFill = document.getElementById("progressFill");
@@ -1191,6 +1193,21 @@ const resultTotal = document.getElementById("resultTotal");
 const finalScore = document.getElementById("finalScore");
 const finalMessage = document.getElementById("finalMessage");
 const restartBtn = document.getElementById("restartBtn");
+const reviewBtn = document.getElementById("reviewBtn");
+const reviewPanel = document.getElementById("reviewPanel");
+const reviewContent = document.getElementById("reviewContent");
+const reviewSummary = document.getElementById("reviewSummary");
+const closeReview = document.getElementById("closeReview");
+const reviewQuestionNumber = document.getElementById("reviewQuestionNumber");
+const reviewTopic = document.getElementById("reviewTopic");
+const reviewQuestion = document.getElementById("reviewQuestion");
+const reviewCode = document.getElementById("reviewCode");
+const reviewCodeText = reviewCode.querySelector("code");
+const reviewWrongAnswer = document.getElementById("reviewWrongAnswer");
+const reviewCorrectAnswer = document.getElementById("reviewCorrectAnswer");
+const reviewExplanation = document.getElementById("reviewExplanation");
+const reviewPrevBtn = document.getElementById("reviewPrevBtn");
+const reviewNextBtn = document.getElementById("reviewNextBtn");
 const quizPanel = document.querySelector(".quiz-panel");
 const setStrip = document.getElementById("setStrip");
 
@@ -1263,6 +1280,7 @@ function chooseAnswer(selected) {
   if (!answered.has(currentIndex)) {
     const correct = selected === activeQuestions[currentIndex].answer;
     if (correct) score += 1;
+    else wrongAnswers.push({ index: currentIndex, question: activeQuestions[currentIndex], selected });
     answered.set(currentIndex, { selected, correct });
   }
   showAnswer(selected, true);
@@ -1305,6 +1323,12 @@ function showResults() {
   resultPercent.textContent = `${percent}%`;
   resultCorrect.textContent = `${score} correct`;
   resultTotal.textContent = `${activeQuestions.length} questions`;
+  
+  if (wrongAnswers.length > 0) {
+    reviewBtn.style.display = "inline-block";
+  } else {
+    reviewBtn.style.display = "none";
+  }
   finalMessage.textContent = percent >= 75
     ? "Strong start. The mixed question style is working well for practice."
     : "Good quiz run. Review the explanations and retry to strengthen weak areas.";
@@ -1315,8 +1339,75 @@ function restartQuiz() {
   currentIndex = 0;
   score = 0;
   answered = new Map();
+  wrongAnswers = [];
+  currentReviewIndex = 0;
+  reviewBtn.style.display = "none";
+  resultPanel.classList.add("hidden");
+  reviewPanel.classList.add("hidden");
+  quizPanel.classList.remove("hidden");
   renderQuestion();
 }
+
+function showReviewPanel() {
+  resultPanel.classList.add("hidden");
+  reviewPanel.classList.remove("hidden");
+  currentReviewIndex = 0;
+  showReviewQuestion();
+}
+
+function showReviewQuestion() {
+  if (wrongAnswers.length === 0) return;
+  
+  const item = wrongAnswers[currentReviewIndex];
+  const question = item.question;
+  const correctAnswer = question.options[question.answer];
+  const selectedAnswer = question.options[item.selected];
+  
+  reviewSummary.textContent = `Question ${currentReviewIndex + 1} of ${wrongAnswers.length}`;
+  document.getElementById("reviewQuestionNumber").textContent = `Question ${item.index + 1}`;
+  document.getElementById("reviewTopic").textContent = question.topic;
+  document.getElementById("reviewQuestion").textContent = question.question;
+  
+  const reviewCode = document.getElementById("reviewCode");
+  if (question.code) {
+    reviewCode.classList.remove("hidden");
+    reviewCode.querySelector("code").textContent = question.code;
+  } else {
+    reviewCode.classList.add("hidden");
+  }
+  
+  document.getElementById("reviewWrongAnswer").innerHTML = `<strong>Your answer:</strong> ${selectedAnswer}`;
+  document.getElementById("reviewCorrectAnswer").innerHTML = `<strong>Correct answer:</strong> ${correctAnswer}`;
+  document.getElementById("reviewExplanation").textContent = question.explanation;
+  
+  document.getElementById("reviewPrevBtn").disabled = currentReviewIndex === 0;
+  document.getElementById("reviewNextBtn").disabled = currentReviewIndex === wrongAnswers.length - 1;
+  document.getElementById("reviewNextBtn").textContent = currentReviewIndex === wrongAnswers.length - 1 ? "Finish" : "Next";
+}
+
+function nextReviewQuestion() {
+  if (currentReviewIndex < wrongAnswers.length - 1) {
+    currentReviewIndex++;
+    showReviewQuestion();
+  } else {
+    hideReviewPanel();
+  }
+}
+
+function prevReviewQuestion() {
+  if (currentReviewIndex > 0) {
+    currentReviewIndex--;
+    showReviewQuestion();
+  }
+}
+
+function hideReviewPanel() {
+  reviewPanel.classList.add("hidden");
+  resultPanel.classList.remove("hidden");
+}
+
+
+
 
 prevBtn.addEventListener("click", () => {
   if (currentIndex > 0) {
@@ -1334,9 +1425,39 @@ nextBtn.addEventListener("click", () => {
   renderQuestion();
 });
 
+reviewBtn.addEventListener("click", () => {
+  showReviewPanel();
+});
+
+closeReview.addEventListener("click", () => {
+  hideReviewPanel();
+});
+
+reviewPrevBtn.addEventListener("click", () => {
+  prevReviewQuestion();
+});
+
+reviewNextBtn.addEventListener("click", () => {
+  nextReviewQuestion();
+});
+
 restartBtn.addEventListener("click", () => {
   restartQuiz();
 });
+
+closeReview.addEventListener("click", () => {
+  hideReviewPanel();
+});
+
+reviewPrevBtn.addEventListener("click", () => {
+  prevReviewQuestion();
+});
+
+reviewNextBtn.addEventListener("click", () => {
+  nextReviewQuestion();
+});
+
+
 
 renderSetButtons();
 renderQuestion();
