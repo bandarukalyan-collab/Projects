@@ -18,7 +18,7 @@ const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET;
 const googleRedirectUri =
   process.env.GOOGLE_REDIRECT_URI || `http://127.0.0.1:${port}/api/auth/google/callback`;
 const openaiApiKey = process.env.OPENAI_API_KEY;
-const openaiModel = process.env.OPENAI_MODEL || 'gpt-5.2';
+const openaiModel = process.env.OPENAI_MODEL || 'gpt-4o-mini';
 const gmailScope = 'https://www.googleapis.com/auth/gmail.readonly';
 
 const server = http.createServer(async (req, res) => {
@@ -218,7 +218,7 @@ async function analyzeMessagesWithOpenAi(prompt, plan, messages) {
     }))
   });
 
-  const response = await fetch('https://api.openai.com/v1/responses', {
+  const response = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${openaiApiKey}`,
@@ -226,20 +226,18 @@ async function analyzeMessagesWithOpenAi(prompt, plan, messages) {
     },
     body: JSON.stringify({
       model: openaiModel,
-      max_output_tokens: 1800,
-      text: { format: emailCardsSchema() },
-      instructions: [
-        'You are a Gmail inbox assistant.',
-        'Use only the provided Gmail messages.',
-        'Return the latest emails as individual cards, like a clean inbox digest.',
-        'Create one card for each provided email, up to 10 cards.',
-        'The summary for each card must be one short plain-English sentence.',
-        'Use category labels such as Finance, Work, Learning, Personal, Travel, Utility, Security, Promotion, or Other.',
-        'Use priority values Low, Normal, High, or Urgent.',
-        'Use action as Reply, Read, Pay, Verify, Track, Archive, or None.',
-        'Do not group messages. Do not create a decision dashboard. Do not write a big verdict.'
-      ].join(' '),
-      input
+      max_tokens: 1800,
+      messages: [
+        {
+          role: 'system',
+          content: 'You are a Gmail inbox assistant. Use only the provided Gmail messages. Return the latest emails as individual cards, like a clean inbox digest. Create one card for each provided email, up to 10 cards. The summary for each card must be one short plain-English sentence. Use category labels such as Finance, Work, Learning, Personal, Travel, Utility, Security, Promotion, or Other. Use priority values Low, Normal, High, or Urgent. Use action as Reply, Read, Pay, Verify, Track, Archive, or None. Do not group messages. Do not create a decision dashboard. Do not write a big verdict. Return ONLY valid JSON with this schema: {"answer": "string", "emailCards": [{"id": "string", "subject": "string", "sender": "string", "time": "string", "summary": "string", "category": "string", "priority": "string", "action": "string"}]}.'
+        },
+        {
+          role: 'user',
+          content: input
+        }
+      ],
+      response_format: { type: 'json_object' }
     })
   });
 
@@ -457,7 +455,7 @@ async function summarizeEmail(message) {
     `Body: ${trimForPrompt(message.body || message.snippet || '', 9000)}`
   ].join('\n');
 
-  const response = await fetch('https://api.openai.com/v1/responses', {
+  const response = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${openaiApiKey}`,
@@ -465,18 +463,18 @@ async function summarizeEmail(message) {
     },
     body: JSON.stringify({
       model: openaiModel,
-      max_output_tokens: 900,
-      instructions: [
-        'You summarize Gmail messages for a busy professional.',
-        'Use only the supplied email content.',
-        'Return only valid JSON with these keys: summary, priority, category, actionItems, suggestedReply, keyDetails.',
-        'summary must be 3 to 5 short sentences.',
-        'priority must be one of Low, Normal, High, Urgent.',
-        'category must be a concise label such as Work, Finance, Travel, Personal, Promotion, Security, or Follow-up.',
-        'actionItems and keyDetails must each contain 0 to 5 concise strings.',
-        'suggestedReply should be empty when no reply is needed.'
-      ].join(' '),
-      input
+      max_tokens: 900,
+      messages: [
+        {
+          role: 'system',
+          content: 'You summarize Gmail messages for a busy professional. Use only the supplied email content. Return only valid JSON with these keys: summary, priority, category, actionItems, suggestedReply, keyDetails. summary must be 3 to 5 short sentences. priority must be one of Low, Normal, High, Urgent. category must be a concise label such as Work, Finance, Travel, Personal, Promotion, Security, or Follow-up. actionItems and keyDetails must each contain 0 to 5 concise strings. suggestedReply should be empty when no reply is needed. Return ONLY valid JSON.'
+        },
+        {
+          role: 'user',
+          content: input
+        }
+      ],
+      response_format: { type: 'json_object' }
     })
   });
 
@@ -628,6 +626,11 @@ function stripHtml(value) {
 }
 
 function extractOpenAiText(response) {
+  // Handle standard Chat Completions API response
+  if (response.choices && response.choices[0] && response.choices[0].message) {
+    return response.choices[0].message.content || '';
+  }
+  // Handle legacy response format
   if (response.output_text) return response.output_text;
   return (response.output || [])
     .flatMap((item) => item.content || [])

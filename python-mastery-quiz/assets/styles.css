@@ -613,6 +613,153 @@ h2 {
   }
 }
 
+
+.review-panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  backdrop-filter: blur(18px);
+  box-shadow: 0 26px 70px rgba(15, 23, 42, 0.14);
+  padding: 22px;
+  animation: panelIn 260ms ease both;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.review-header h2 {
+  font-size: 21px;
+  margin: 0;
+}
+
+.review-header p {
+  color: var(--muted);
+  font-size: 13px;
+  margin: 4px 0 0;
+}
+
+.review-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.review-item {
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.review-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.review-item-number {
+  background: var(--primary);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 999px;
+}
+
+.review-item-topic {
+  background: rgba(37, 99, 235, 0.1);
+  color: var(--primary);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 999px;
+}
+
+.review-question {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 12px;
+  color: var(--ink);
+}
+
+.review-code {
+  background: #101827;
+  border-radius: 8px;
+  color: #e5e7eb;
+  font-size: 12px;
+  line-height: 1.42;
+  margin: 12px 0;
+  overflow-x: auto;
+  padding: 12px;
+  white-space: pre;
+}
+
+.review-answers {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.review-answer {
+  font-size: 13px;
+  margin: 0;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+.review-answer.wrong {
+  background: rgba(185, 28, 28, 0.1);
+  color: var(--bad);
+  border-left: 3px solid var(--bad);
+}
+
+.review-answer.correct {
+  background: rgba(15, 118, 110, 0.1);
+  color: var(--good);
+  border-left: 3px solid var(--good);
+}
+
+.review-explanation {
+  font-size: 13px;
+  color: var(--muted);
+  margin: 12px 0 0;
+  line-height: 1.4;
+}
+
+.review-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.review-actions button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.secondary {
+  background: rgba(37, 99, 235, 0.1);
+  color: var(--primary);
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.secondary:hover {
+  background: rgba(37, 99, 235, 0.2);
+}
+
+
 @media (max-width: 680px) {
   .app-shell {
     width: min(100% - 20px, 1040px);

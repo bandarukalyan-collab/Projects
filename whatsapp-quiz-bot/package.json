@@ -2,9 +2,9 @@
   "name": "whatsapp-quiz-bot",
   "version": "1.0.0",
   "description": "WhatsApp Quiz Bot for Python questions",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node src/index.js"
   },
   "dependencies": {
     "whatsapp-web.js": "^1.23.0",

@@ -584,6 +584,6 @@ async function loadEnv(envPath) {
     if (index === -1) return;
     const key = trimmed.slice(0, index).trim();
     const value = trimmed.slice(index + 1).trim().replace(/^"|"$/g, '');
-    if (key && !process.env[key]) process.env[key] = value;
+    if (key) process.env[key] = value;
   });
 }
