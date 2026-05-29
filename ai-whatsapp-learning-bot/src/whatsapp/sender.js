@@ -6,18 +6,23 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-function messageSnippet(message) {
-  const firstLine = message.split(/\r?\n/).find((line) => line.trim());
-  return (firstLine || message).trim().slice(0, 80);
+function messageMarkers(message) {
+  return message
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter((line) => line.length >= 12)
+    .slice(0, 5);
 }
 
 async function waitForOutgoingMessageToSync(page, message) {
-  const snippet = messageSnippet(message);
+  const markers = messageMarkers(message);
 
   await page.waitForFunction(
-    (text) => {
+    (expectedMarkers) => {
       const outgoingMessages = [...document.querySelectorAll('[class*="message-out"]')];
-      const messageNode = outgoingMessages.reverse().find((node) => node.innerText.includes(text));
+      const messageNode = outgoingMessages
+        .reverse()
+        .find((node) => expectedMarkers.every((marker) => node.innerText.includes(marker)));
       if (!messageNode) return false;
 
       const pendingIcons = messageNode.querySelectorAll(
@@ -26,7 +31,7 @@ async function waitForOutgoingMessageToSync(page, message) {
 
       return pendingIcons.length === 0;
     },
-    snippet,
+    markers,
     { timeout: 120000 }
   );
 }
@@ -103,6 +108,7 @@ async function sendToChat({ chatName, message, noSend = false, attempt = 1 }) {
     await sendButton.waitFor({ state: "visible", timeout: 30000 });
     await sendButton.click();
     await waitForOutgoingMessageToSync(page, message);
+    await page.screenshot({ path: screenshotPath(`whatsapp-sent-${chatName}-${startedAt}.png`), fullPage: true });
     console.log(`WhatsApp confirmed outgoing message for chat: ${chatName}`);
   } catch (error) {
     const page = context.pages()[0];
