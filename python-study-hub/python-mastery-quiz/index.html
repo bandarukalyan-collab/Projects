@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Python Mastery Quiz</title>
+    <link rel="stylesheet" href="assets/styles.css?v=23" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="topbar" aria-label="Quiz overview">
+        <div class="title-block">
+          <h1>Python Mastery Quiz</h1>
+          <p class="subtitle">Theory, code output, debugging, comparisons, and scenario questions in one mixed practice flow.</p>
+        </div>
+        <div class="score-box">
+          <div class="stat-card question-stat">
+            <strong id="progressText">Question 1 of 10</strong>
+          </div>
+          <div class="stat-card score-stat">
+            <strong id="scoreText">Score 0</strong>
+          </div>
+        </div>
+      </section>
+
+      <section id="setStrip" class="set-strip" aria-label="Quiz sets"></section>
+
+      <section class="quiz-panel" aria-live="polite">
+        <div class="progress-track" aria-hidden="true">
+          <div id="progressFill" class="progress-fill"></div>
+        </div>
+
+        <div class="meta-row">
+          <span id="topicTag" class="tag">Python Basics</span>
+          <span id="typeTag" class="tag muted">Theory</span>
+          <span id="difficultyTag" class="tag level-easy">Easy</span>
+        </div>
+
+        <h2 id="questionText"></h2>
+        <pre id="codeBlock" class="code-block hidden"><code></code></pre>
+        <div id="options" class="options"></div>
+
+        <div id="feedback" class="feedback hidden"></div>
+
+        <div class="actions">
+          <button id="prevBtn" class="ghost">Back</button>
+          <button id="nextBtn" class="primary">Next</button>
+        </div>
+      </section>
+
+      <section id="resultPanel" class="result-panel hidden">
+        <div class="result-content">
+          <div class="result-badge">
+            <span id="resultPercent">0%</span>
+          </div>
+          <div class="result-copy">
+            <p class="eyebrow">Session Complete</p>
+            <h2 id="finalScore"></h2>
+            <p id="finalMessage"></p>
+            <div class="result-meter" aria-hidden="true">
+              <div id="resultFill" class="result-fill"></div>
+            </div>
+            <div class="result-stats">
+              <span id="resultCorrect">0 correct</span>
+              <span id="resultTotal">7 questions</span>
+            </div>
+          </div>
+        </div>
+        <button id="restartBtn" class="primary">Restart Quiz</button>
+        <button id="reviewBtn" class="secondary" style="display: none;">Review Wrong Answers</button>
+      </section>
+
+      <section id="reviewPanel" class="review-panel hidden">
+        <div class="review-header">
+          <h2>Review Wrong Answers</h2>
+          <p id="reviewSummary">Question 1 of 0</p>
+          <button id="closeReview" class="ghost">Close Review</button>
+        </div>
+        <div class="review-content">
+          <div class="review-item">
+            <div class="review-item-header">
+              <span id="reviewQuestionNumber" class="review-item-number">Question 1</span>
+              <span id="reviewTopic" class="review-item-topic">Topic</span>
+            </div>
+            <p id="reviewQuestion" class="review-question">Question text</p>
+            <pre id="reviewCode" class="review-code hidden"><code></code></pre>
+            <div class="review-answers">
+              <p id="reviewWrongAnswer" class="review-answer wrong"><strong>Your answer:</strong> </p>
+              <p id="reviewCorrectAnswer" class="review-answer correct"><strong>Correct answer:</strong> </p>
+            </div>
+            <p id="reviewExplanation" class="review-explanation">Explanation</p>
+          </div>
+        </div>
+        <div class="review-actions">
+          <button id="reviewPrevBtn" class="ghost">Previous</button>
+          <button id="reviewNextBtn" class="primary">Next</button>
+        </div>
+      </section>
+    </main>
+
+    <script src="src/app.js?v=30"></script>
+  </body>
+</html>
