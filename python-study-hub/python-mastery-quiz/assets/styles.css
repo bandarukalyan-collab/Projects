@@ -56,6 +56,29 @@ button {
   padding: 24px 0;
 }
 
+body.embedded {
+  background: #f8fbff;
+}
+
+body.embedded::before,
+body.embedded .topbar,
+.topbar {
+  display: none;
+}
+
+body.embedded .app-shell {
+  width: 100%;
+  padding: 10px;
+}
+
+body.embedded .set-strip {
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+
+body.embedded .quiz-panel {
+  padding: 18px;
+}
+
 .topbar {
   align-items: end;
   display: flex;

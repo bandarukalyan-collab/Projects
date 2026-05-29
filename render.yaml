@@ -22,3 +22,9 @@ services:
     rootDir: python-mastery-quiz
     buildCommand: echo "No build needed"
     staticPublishPath: .
+  - type: web
+    runtime: static
+    name: python-study-hub
+    rootDir: python-study-hub
+    buildCommand: echo "No build needed"
+    staticPublishPath: .
