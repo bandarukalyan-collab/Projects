@@ -1,6 +1,6 @@
 param(
   [string]$PhoneNumber = "919849605044",
-  [string[]]$ChatName = @(),
+  [string[]]$ChatName = @("Keep Learning.."),
   [string]$ChatNames = "",
   [switch]$NoSend
 )

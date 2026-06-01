@@ -6,13 +6,15 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
-$python = "c:/Windsurf-Test/.venv/Scripts/python.exe"
-$script = "c:/Windsurf-Test/leave_email_notifier/daily_leave_email.py"
-$log = "c:/Windsurf-Test/leave_email_notifier/logs/send_leave_email.log"
+$scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$projectRoot = Split-Path -Parent $scriptDir
+$python = "python"
+$script = Join-Path $projectRoot "src\daily_leave_email.py"
+$log = Join-Path $projectRoot "logs\send_leave_email.log"
 
 # Ensure logs directory exists
-if (!(Test-Path "c:/Windsurf-Test/leave_email_notifier/logs")) {
-    New-Item -ItemType Directory -Path "c:/Windsurf-Test/leave_email_notifier/logs" -Force
+if (!(Test-Path (Join-Path $projectRoot "logs"))) {
+    New-Item -ItemType Directory -Path (Join-Path $projectRoot "logs") -Force
 }
 
 function Log([string]$message) {

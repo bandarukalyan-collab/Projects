@@ -11,7 +11,7 @@ Get-ScheduledTask -TaskName "AI Model Tracker" -ErrorAction SilentlyContinue | U
 # Create new scheduled task
 Write-Host "Creating scheduled task for daily monitoring..." -ForegroundColor Blue
 
-$action = New-ScheduledTaskAction -Execute "python.exe" -Argument "c:\Windsurf-Test\ai_model_tracker\main.py"
+$action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-ExecutionPolicy Bypass -File $PSScriptRoot\send-whatsapp-update.ps1"
 $trigger = New-ScheduledTaskTrigger -Weekly -DaysOfWeek Monday,Tuesday,Wednesday,Thursday,Friday -At 11:00AM
 $settings = New-ScheduledTaskSettingsSet -StartWhenAvailable -WakeToRun -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
 $principal = New-ScheduledTaskPrincipal -UserId "SYSTEM" -LogonType ServiceAccount
@@ -23,7 +23,7 @@ Write-Host ""
 Write-Host "Task Details:" -ForegroundColor Yellow
 Write-Host "- Name: AI Model Tracker"
 Write-Host "- Schedule: Monday-Friday at 11:00 AM"
-Write-Host "- Action: Run AI model tracker"
+Write-Host "- Action: Run AI model tracker and send WhatsApp update"
 Write-Host "- User: SYSTEM (runs even when not logged in)"
 Write-Host ""
 

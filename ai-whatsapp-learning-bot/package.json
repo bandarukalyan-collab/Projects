@@ -5,11 +5,11 @@
   "main": "src/index.js",
   "scripts": {
     "init-db": "node scripts/initDb.js",
-    "generate": "node scripts/testGenerate.js",
-    "send:questions": "node src/jobs/sendDailyQuestions.js",
-    "send:answers": "node src/jobs/sendDailyAnswers.js",
-    "send:recap": "node src/jobs/sendWeeklyRecap.js",
-    "start": "node src/index.js"
+    "generate": "node --use-system-ca scripts/testGenerate.js",
+    "send:questions": "node --use-system-ca src/jobs/sendDailyQuestions.js",
+    "send:answers": "node --use-system-ca src/jobs/sendDailyAnswers.js",
+    "send:recap": "node --use-system-ca src/jobs/sendWeeklyRecap.js",
+    "start": "node --use-system-ca src/index.js"
   },
   "dependencies": {
     "dotenv": "^16.4.7",

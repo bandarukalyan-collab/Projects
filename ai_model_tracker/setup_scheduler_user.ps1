@@ -12,7 +12,7 @@ Get-ScheduledTask -TaskName "AI Model Tracker" -ErrorAction SilentlyContinue | U
 # Create new scheduled task
 Write-Host "Creating scheduled task for daily monitoring..." -ForegroundColor Blue
 
-$action = New-ScheduledTaskAction -Execute "python.exe" -Argument "c:\Windsurf-Test\ai_model_tracker\main.py"
+$action = New-ScheduledTaskAction -Execute "python.exe" -Argument "$PSScriptRoot\main.py"
 $trigger = New-ScheduledTaskTrigger -Weekly -DaysOfWeek Monday,Tuesday,Wednesday,Thursday,Friday -At 11:00AM
 $settings = New-ScheduledTaskSettingsSet -StartWhenAvailable -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
 $principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive -RunLevel Highest

@@ -5,7 +5,7 @@ const schedule = require('node-schedule');
 const fs = require('fs');
 const path = require('path');
 const db = require('./database');
-const config = JSON.parse(fs.readFileSync('../config/config.json', 'utf8'));
+const config = JSON.parse(fs.readFileSync('./config/config.json', 'utf8'));
 
 // Initialize database
 db.initDatabase();
@@ -25,7 +25,9 @@ db.getAllQuestions((err, questions) => {
 const client = new Client({
     authStrategy: new LocalAuth(),
     puppeteer: {
-        headless: true
+        headless: true,
+        protocolTimeout: 120000,
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
     }
 });
 
