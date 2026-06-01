@@ -1158,12 +1158,12 @@ h1 {
 }
 
 .quiz-frame-shell {
-  height: min(820px, calc(100vh - 160px));
-  min-height: 660px;
+  height: 940px;
+  min-height: 760px;
   border: 1px solid var(--line);
-  border-radius: 20px;
+  border-radius: 16px;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.92);
   box-shadow: 0 24px 55px rgba(0, 0, 0, 0.18);
 }
 
@@ -1176,10 +1176,7 @@ h1 {
 }
 
 .quiz-source {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
+  display: block;
   margin-bottom: 16px;
   padding: 16px;
   border: 1px solid var(--line);
@@ -1196,15 +1193,6 @@ h1 {
 .quiz-source span {
   color: rgba(255, 255, 255, 0.68);
   font-size: 14px;
-}
-
-.quiz-source a {
-  flex: 0 0 auto;
-  border-radius: 12px;
-  background: var(--gold);
-  color: #172033;
-  padding: 10px 13px;
-  font-weight: 900;
 }
 
 .quiz-set-strip {
@@ -1337,8 +1325,8 @@ h1 {
   }
 
   .quiz-frame-shell {
-    height: min(760px, calc(100vh - 170px));
-    min-height: 620px;
+    height: 900px;
+    min-height: 720px;
   }
 
   .topic-toolbar {
@@ -1401,15 +1389,10 @@ h1 {
     grid-template-columns: 1fr 1fr;
   }
 
-  .quiz-source {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
   .quiz-frame-shell {
-    border-radius: 16px;
-    height: 720px;
-    min-height: 720px;
+    border-radius: 12px;
+    height: 900px;
+    min-height: 760px;
   }
 
   .timeline-card,

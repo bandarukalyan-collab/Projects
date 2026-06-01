@@ -588,7 +588,7 @@ function renderRoadmap() {
   document.querySelector("#roadmapList").innerHTML = roadmap
     .map(
       ([day, title, description]) => `
-        <article class="timeline-card clickable-card" data-material-title="${title.toLowerCase()}" data-item-title="${title.toLowerCase()}" data-keywords="${title} ${description}">
+        <article class="timeline-card" data-item-title="${title.toLowerCase()}" data-keywords="${title} ${description}">
           <div class="day-number"><span>Day</span><b>${day}</b></div>
           <div>
             <h3>${title}</h3>
@@ -624,7 +624,9 @@ function renderTopics(filter = "all") {
 }
 
 function renderPractice() {
-  document.querySelector("#practiceList").innerHTML = practice
+  const practiceList = document.querySelector("#practiceList");
+  if (!practiceList) return;
+  practiceList.innerHTML = practice
     .map(
       ([difficulty, title, description]) => `
         <article class="practice-card" data-item-title="${title.toLowerCase()}" data-keywords="${difficulty} ${title} ${description}">
@@ -638,7 +640,9 @@ function renderPractice() {
 }
 
 function renderProjects() {
-  document.querySelector("#projectGrid").innerHTML = projects
+  const projectGrid = document.querySelector("#projectGrid");
+  if (!projectGrid) return;
+  projectGrid.innerHTML = projects
     .map(
       ([title, description, type, time], index) => `
         <article class="project-card" data-item-title="${title.toLowerCase()}" data-keywords="${title} ${description} ${type}">
@@ -673,26 +677,12 @@ function searchableItems() {
       description,
       keywords: `${title} ${description} ${level} topics`,
     })),
-    ...practice.map(([difficulty, title, description]) => ({
-      route: "practice",
-      label: difficulty,
-      title,
-      description,
-      keywords: `${difficulty} ${title} ${description} practice exercises tasks`,
-    })),
-    ...projects.map(([title, description, type]) => ({
-      route: "projects",
-      label: type,
-      title,
-      description,
-      keywords: `${title} ${description} ${type} projects apps build`,
-    })),
     {
       route: "interview",
       label: "Quiz",
-      title: "Interview Practice",
+      title: "Practice Questions",
       description: "Python Mastery Quiz with mixed question sets and review.",
-      keywords: "interview quiz questions python mastery",
+      keywords: "practice questions quiz python mastery",
     },
   ];
 }
