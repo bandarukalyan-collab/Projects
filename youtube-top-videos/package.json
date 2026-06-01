@@ -5,11 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
-    "dev:server": "node --watch server/index.js",
+    "dev:server": "node --use-system-ca --watch server/index.js",
     "dev:client": "vite --host 127.0.0.1",
     "build": "vite build",
     "preview": "vite preview --host 127.0.0.1",
-    "start": "node server/index.js"
+    "start": "node --use-system-ca server/index.js"
   },
   "dependencies": {
     "@vitejs/plugin-react": "^5.1.1",
