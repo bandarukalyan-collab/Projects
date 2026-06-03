@@ -13,13 +13,6 @@ Write-Host "Running AI Model Tracker..."
 Set-Location -LiteralPath $trackerDir
 python main.py
 
-if (-not (Test-Path "email_preview.html")) {
-    Write-Host "Error: email_preview.html not found"
-    exit 1
-}
-
-$htmlContent = Get-Content "email_preview.html" -Raw -Encoding UTF8
-
 # Extract actual data from ai_model_tracker output
 # Read the state file to get model data
 $stateFile = "ai_models_state.json"
