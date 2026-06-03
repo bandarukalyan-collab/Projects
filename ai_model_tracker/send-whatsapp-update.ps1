@@ -7,7 +7,7 @@ param(
 $ErrorActionPreference = "Stop"
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $trackerDir = $scriptDir
-$whatsappDir = "c:\Study Materials\Projects\daily-ai-model-whatsapp-update"
+$whatsappDir = "C:\Windsurf-Test\daily-ai-model-whatsapp-update"
 
 Write-Host "Running AI Model Tracker..."
 Set-Location -LiteralPath $trackerDir
