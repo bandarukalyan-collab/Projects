@@ -17,7 +17,7 @@ const port = Number(process.env.PORT || 4177);
 const host = process.env.HOST || '0.0.0.0';
 const apiKey = process.env.YOUTUBE_API_KEY;
 const openaiApiKey = process.env.OPENAI_API_KEY;
-const openaiModel = process.env.OPENAI_MODEL || 'gpt-5.2';
+const openaiModel = process.env.OPENAI_MODEL || 'gpt-4o';
 const youtubeBaseUrl = 'https://www.googleapis.com/youtube/v3';
 
 const server = http.createServer(async (req, res) => {
@@ -41,18 +41,33 @@ const server = http.createServer(async (req, res) => {
         return;
       }
 
-      const data = await youtubeGet('/search', {
-        part: 'snippet',
-        type: 'channel',
-        q: query,
-        maxResults: '6'
-      });
+      let channelData;
+      if (query.startsWith('@')) {
+        try {
+          channelData = await youtubeGet('/channels', {
+            part: 'snippet,statistics',
+            forHandle: query
+          });
+          console.log(`Found channel by handle: ${channelData.items?.[0]?.id}`);
+        } catch (e) {
+          console.log(`Handle search failed: ${e.message}`);
+        }
+      }
 
-      const channelIds = data.items.map((item) => item.id.channelId).filter(Boolean);
+      if (!channelData?.items?.length) {
+        channelData = await youtubeGet('/search', {
+          part: 'snippet',
+          type: 'channel',
+          q: query,
+          maxResults: '6'
+        });
+      }
+
+      const channelIds = channelData.items.map((item) => item.id.channelId || item.id).filter(Boolean);
       const statsById = await getChannelStats(channelIds);
 
-      const channels = data.items.map((item) => {
-        const id = item.id.channelId;
+      const channels = channelData.items.map((item) => {
+        const id = item.id.channelId || item.id;
         return {
           id,
           title: item.snippet.title,
@@ -129,30 +144,31 @@ server.listen(port, host, () => {
 });
 
 async function getTopRecentVideos(channelId, rangeDays) {
-  const publishedAfter = new Date(Date.now() - rangeDays * 24 * 60 * 60 * 1000).toISOString();
-  const searchData = await youtubeGet('/search', {
+  const cutoffDate = new Date(Date.now() - rangeDays * 24 * 60 * 60 * 1000);
+  
+  const videosData = await youtubeGet('/search', {
     part: 'snippet',
     type: 'video',
     channelId,
-    publishedAfter,
     order: 'date',
     maxResults: '50'
   });
 
-  const ids = searchData.items.map((item) => item.id.videoId).filter(Boolean);
+  const ids = videosData.items.map((item) => item.id.videoId).filter(Boolean);
   if (ids.length === 0) return [];
 
-  const videosData = await youtubeGet('/videos', {
+  const detailedVideosData = await youtubeGet('/videos', {
     part: 'snippet,statistics,contentDetails',
     id: ids.join(','),
     maxResults: '50'
   });
 
-  return videosData.items
+  const filteredVideos = detailedVideosData.items
     .map((item) => ({
       id: item.id,
       title: item.snippet.title,
       channelTitle: item.snippet.channelTitle,
+      channelId: item.snippet.channelId,
       publishedAt: item.snippet.publishedAt,
       description: item.snippet.description,
       thumbnail: pickThumbnail(item.snippet.thumbnails),
@@ -161,6 +177,14 @@ async function getTopRecentVideos(channelId, rangeDays) {
       commentCount: item.statistics.commentCount ? Number(item.statistics.commentCount) : null,
       duration: item.contentDetails.duration
     }))
+    .filter((video) => {
+      const videoDate = new Date(video.publishedAt);
+      const isAfterCutoff = videoDate.getTime() >= cutoffDate.getTime();
+      const isCorrectChannel = video.channelId === channelId;
+      return isAfterCutoff && isCorrectChannel;
+    });
+  
+  return filteredVideos
     .sort((a, b) => b.viewCount - a.viewCount)
     .slice(0, 5);
 }
@@ -176,7 +200,7 @@ async function summarizeVideo(video) {
     `Description: ${trimForPrompt(video.description || 'No description available.', 7000)}`
   ].join('\n');
 
-  const response = await fetch('https://api.openai.com/v1/responses', {
+  const response = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${openaiApiKey}`,
@@ -184,17 +208,25 @@ async function summarizeVideo(video) {
     },
     body: JSON.stringify({
       model: openaiModel,
-      max_output_tokens: 900,
-      instructions: [
-        'You summarize YouTube videos for busy viewers.',
-        'Use only the provided title, description, and public metrics.',
-        'Do not pretend you watched the video or read a transcript.',
-        'Return only valid JSON with these keys: shortSummary, keyPoints, takeaways, worthWatchingFor.',
-        'shortSummary must be one plain string containing 3 to 5 short sentences separated by spaces, not an array.',
-        'keyPoints and takeaways must each contain 3 to 5 concise strings.',
-        'worthWatchingFor must be one concise sentence.'
-      ].join(' '),
-      input
+      max_tokens: 900,
+      messages: [
+        {
+          role: 'system',
+          content: [
+            'You summarize YouTube videos for busy viewers.',
+            'Use only the provided title, description, and public metrics.',
+            'Do not pretend you watched the video or read a transcript.',
+            'Return only valid JSON with these keys: shortSummary, keyPoints, takeaways, worthWatchingFor.',
+            'shortSummary must be one plain string containing 3 to 5 short sentences separated by spaces, not an array.',
+            'keyPoints and takeaways must each contain 3 to 5 concise strings.',
+            'worthWatchingFor must be one concise sentence.'
+          ].join(' ')
+        },
+        {
+          role: 'user',
+          content: input
+        }
+      ]
     })
   });
 
@@ -475,7 +507,7 @@ function extractOpenAiText(response) {
 }
 
 function parseOpenAiJson(response) {
-  const text = extractOpenAiText(response).trim();
+  const text = response.choices?.[0]?.message?.content?.trim() || '';
   if (!text) throw new Error('OpenAI returned an empty summary.');
 
   try {
