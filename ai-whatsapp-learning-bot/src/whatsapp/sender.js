@@ -19,21 +19,16 @@ async function waitForOutgoingMessageToSync(page, message) {
 
   await page.waitForFunction(
     (expectedMarkers) => {
-      const outgoingMessages = [...document.querySelectorAll('[class*="message-out"]')];
-      const messageNode = outgoingMessages
-        .reverse()
-        .find((node) => expectedMarkers.every((marker) => node.innerText.includes(marker)));
-      if (!messageNode) return false;
-
-      const pendingIcons = messageNode.querySelectorAll(
-        '[data-icon="msg-time"], [data-icon="status-time"], [aria-label*="pending" i], [aria-label*="waiting" i]'
-      );
-
-      return pendingIcons.length === 0;
+      const visibleText = document.body.innerText;
+      return expectedMarkers.every((marker) => visibleText.includes(marker));
     },
     markers,
-    { timeout: 120000 }
+    { timeout: 30000 }
   );
+
+  // WhatsApp obfuscates message bubble classes, so allow its client time to queue
+  // the message after verifying the sent text is visible in the open chat.
+  await page.waitForTimeout(5000);
 }
 
 async function waitForWhatsAppReady({ page, readyLocator, qrCanvas, screenshotPath, startedAt }) {

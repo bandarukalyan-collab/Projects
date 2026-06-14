@@ -17,7 +17,7 @@ Add-Content -LiteralPath $logPath -Value "[$stamp] Starting $JobName" -Encoding 
 
 Push-Location $projectPath
 try {
-  & node $ScriptPath 2>&1 | ForEach-Object {
+  & node --use-system-ca $ScriptPath 2>&1 | ForEach-Object {
     Add-Content -LiteralPath $logPath -Value $_ -Encoding UTF8
   }
 

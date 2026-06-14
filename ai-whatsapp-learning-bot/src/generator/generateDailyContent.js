@@ -113,6 +113,7 @@ function buildPrompt({ contentDate, weekday, recentContent }) {
 async function generateWithOpenAI({ contentDate, weekday, recentContent }) {
   const response = await fetch("https://api.openai.com/v1/responses", {
     method: "POST",
+    signal: AbortSignal.timeout(120000),
     headers: {
       Authorization: `Bearer ${config.openaiApiKey}`,
       "Content-Type": "application/json",
@@ -151,7 +152,12 @@ async function generateDailyContent({ contentDate = formatDateKey(), recentConte
   let generated;
 
   if (config.openaiApiKey) {
-    generated = await generateWithOpenAI({ contentDate, weekday, recentContent });
+    try {
+      generated = await generateWithOpenAI({ contentDate, weekday, recentContent });
+    } catch (error) {
+      console.warn(`OpenAI generation failed; using fallback content: ${error.message}`);
+      generated = generateFallback({ contentDate, recentContent });
+    }
   } else {
     generated = generateFallback({ contentDate, recentContent });
   }
