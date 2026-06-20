@@ -26,9 +26,9 @@ async function waitForOutgoingMessageToSync(page, message) {
     { timeout: 30000 }
   );
 
-  // WhatsApp obfuscates message bubble classes, so allow its client time to queue
-  // the message after verifying the sent text is visible in the open chat.
-  await page.waitForTimeout(5000);
+  // Keep WhatsApp Web alive long enough to move the message past the local
+  // pending-clock state. Closing too quickly can leave the message unsynced.
+  await page.waitForTimeout(45000);
 }
 
 async function waitForWhatsAppReady({ page, readyLocator, qrCanvas, screenshotPath, startedAt }) {
@@ -48,6 +48,23 @@ async function waitForWhatsAppReady({ page, readyLocator, qrCanvas, screenshotPa
   }
 
   throw new Error("WhatsApp did not become ready within 90 seconds.");
+}
+
+async function dismissWhatsAppPopups(page) {
+  await page.keyboard.press("Escape").catch(() => {});
+
+  const closeButtons = [
+    page.locator('div[role="dialog"] button[aria-label="Close"]').first(),
+    page.locator('div[role="dialog"] [aria-label="Close"]').first(),
+    page.locator('button[aria-label="Close"]').first(),
+  ];
+
+  for (const closeButton of closeButtons) {
+    if (await closeButton.isVisible().catch(() => false)) {
+      await closeButton.click().catch(() => {});
+      await page.waitForTimeout(500);
+    }
+  }
 }
 
 async function sendToChat({ chatName, message, noSend = false, attempt = 1 }) {
@@ -73,6 +90,7 @@ async function sendToChat({ chatName, message, noSend = false, attempt = 1 }) {
     ).first();
 
     await waitForWhatsAppReady({ page, readyLocator: searchBox, qrCanvas, screenshotPath, startedAt });
+    await dismissWhatsAppPopups(page);
 
     await searchBox.click();
     await page.keyboard.press(process.platform === "darwin" ? "Meta+A" : "Control+A");
