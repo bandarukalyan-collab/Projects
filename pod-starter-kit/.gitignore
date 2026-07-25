@@ -1,0 +1,54 @@
+# Dependencies
+node_modules/
+.npm
+.yarn/cache
+
+# Environment & Secrets
+.env
+.env.local
+.env.*.local
+.env.production
+.env.development
+.env.test
+
+# IDE & Editor
+.vscode/
+.idea/
+.sublime-text/
+*.swp
+*.swo
+*~
+
+# OS Files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Build & Runtime
+dist/
+build/
+coverage/
+*.log
+*.pid
+.cache/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.venv/
+
+# Local secrets — never commit
+local.config
+
+# Test workspaces — never commit
+*test*workspace/
+*test*workspace*
+dell-sdd/test-*/
+dell-sdd/*test*workspace*/
+dell-sdd/final-test-workspace/
+
+# Claude Code local worktree state — do not commit
+.claude/
+

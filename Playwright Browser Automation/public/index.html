@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>B2B File Download</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .container {
+      background-color: white;
+      padding: 35px 40px;
+      border-radius: 20px;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+      max-width: 420px;
+      width: 100%;
+    }
+    h1 {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-align: center;
+      margin-bottom: 25px;
+      font-size: 28px;
+      font-weight: 700;
+    }
+    .form-group {
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    label {
+      font-weight: 600;
+      color: #2d3748;
+      min-width: 100px;
+      font-size: 13px;
+    }
+    input[type="text"],
+    input[type="password"] {
+      flex: 1;
+      padding: 10px 14px;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 13px;
+      transition: all 0.2s ease;
+      background-color: #f7fafc;
+      max-width: 220px;
+    }
+    input[type="text"]:focus,
+    input[type="password"]:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      background-color: white;
+    }
+    textarea {
+      flex: 1;
+      padding: 10px 14px;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: 'Courier New', monospace;
+      height: 200px;
+      resize: none;
+      transition: all 0.2s ease;
+      background-color: #f7fafc;
+      max-width: 280px;
+      overflow-y: hidden;
+    }
+    textarea:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      background-color: white;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-top: 8px;
+    }
+    button:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+    }
+    button:disabled {
+      background: linear-gradient(135deg, #cbd5e0 0%, #a0aec0 100%);
+      cursor: not-allowed;
+      transform: none;
+    }
+    #progress {
+      margin-top: 20px;
+      padding: 16px;
+      background: linear-gradient(135deg, #edf2f7 0%, #e2e8f0 100%);
+      border-radius: 12px;
+      display: none;
+    }
+    #progress h3 {
+      margin-top: 0;
+      margin-bottom: 12px;
+      color: #2d3748;
+      font-size: 16px;
+      font-weight: 700;
+    }
+    #progress-log {
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+      background-color: white;
+      padding: 12px;
+      border-radius: 8px;
+      height: 180px;
+      overflow-y: auto;
+      border: 1px solid #e2e8f0;
+    }
+    .log-entry {
+      margin: 3px 0;
+      padding: 2px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .log-entry.success {
+      color: #48bb78;
+      font-weight: 600;
+    }
+    .log-entry.error {
+      color: #f56565;
+      font-weight: 600;
+    }
+    .log-entry.info {
+      color: #4299e1;
+    }
+    .log-entry.warning {
+      color: #ed8936;
+      font-weight: 600;
+    }
+    .keywords-group {
+      flex-direction: column;
+      align-items: flex-start;
+      width: 100%;
+    }
+    .keywords-group label {
+      margin-bottom: 8px;
+      width: 100%;
+    }
+    .keywords-group textarea {
+      width: 100%;
+      margin-left: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>B2B File Download</h1>
+    <form id="automationForm">
+      <div class="form-group">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required placeholder="Enter username">
+      </div>
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required placeholder="Enter password">
+      </div>
+      <div class="form-group keywords-group">
+        <label for="keywords">Keywords (one per line):</label>
+        <textarea id="keywords" name="keywords" required placeholder="1338845545&#10;1338843334&#10;1338840375">1338845545
+1338843334
+1338840375</textarea>
+      </div>
+      <button type="submit" id="startButton">Start Automation</button>
+    </form>
+    
+    <div id="progress">
+      <h3>Progress</h3>
+      <div id="progress-log"></div>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('automationForm');
+    const startButton = document.getElementById('startButton');
+    const progressDiv = document.getElementById('progress');
+    const progressLog = document.getElementById('progress-log');
+    let progressInterval;
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const keywords = document.getElementById('keywords').value;
+
+      startButton.disabled = true;
+      startButton.textContent = 'Processing...';
+      progressDiv.style.display = 'block';
+      progressLog.innerHTML = '';
+      
+      // Start polling for progress updates
+      startProgressPolling();
+
+      try {
+        const response = await fetch('/start-automation', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ username, password, keywords }),
+        });
+
+        const result = await response.json();
+        
+        if (response.ok) {
+          addLogEntry(result.message, 'success');
+        } else {
+          addLogEntry(result.error, 'error');
+        }
+      } catch (error) {
+        addLogEntry('Error starting automation: ' + error.message, 'error');
+      }
+    });
+
+    function startProgressPolling() {
+      progressInterval = setInterval(async () => {
+        try {
+          const response = await fetch('/progress');
+          const data = await response.json();
+          
+          if (data.logs && data.logs.length > 0) {
+            const lastLog = data.logs[data.logs.length - 1];
+            if (lastLog.message && !logExists(lastLog.message)) {
+              addLogEntry(lastLog.message, lastLog.type || 'info');
+            }
+          }
+          
+          if (data.completed) {
+            clearInterval(progressInterval);
+            startButton.disabled = false;
+            startButton.textContent = 'Start Automation';
+            addLogEntry('Automation completed successfully!', 'success');
+          }
+        } catch (error) {
+          console.error('Error polling progress:', error);
+        }
+      }, 500);
+    }
+
+    function logExists(message) {
+      const entries = progressLog.querySelectorAll('.log-entry');
+      for (const entry of entries) {
+        if (entry.textContent === message) return true;
+      }
+      return false;
+    }
+
+    function addLogEntry(message, type = 'info') {
+      const entry = document.createElement('div');
+      entry.className = `log-entry ${type}`;
+      entry.textContent = message;
+      progressLog.appendChild(entry);
+      progressLog.scrollTop = progressLog.scrollHeight;
+    }
+  </script>
+</body>
+</html>

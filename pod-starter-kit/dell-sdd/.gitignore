@@ -1,0 +1,25 @@
+# ── Generated outputs (produced by build.py from skills/) ──
+# These are generated at install time — do NOT commit them.
+
+# Devin skills (generated)
+.devin
+
+# Windsurf standalone workflows (generated)
+.windsurf
+
+# Cursor rules (generated)
+.cursor
+
+# Claude Code commands (generated)
+.claude/commands/
+
+# ── Keep these (static / source of truth) ──
+# skills/                          ← canonical skill source
+# .windsurf/hooks/
+# .windsurf/hooks.json
+# build.py
+# setup.py
+
+# ── Python cache ──
+__pycache__/
+*.pyc

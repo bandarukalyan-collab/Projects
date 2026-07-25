@@ -1,0 +1,30 @@
+{
+  "https://jira-uat.dell.com": {
+    "name": "jira-it-stage",
+    "url": "https://mcp.cec.delllabs.net/stage/jira/it",
+    "pat_header": "X-Atlassian-Jira-Personal-Token"
+  },
+  "https://confluence-dev.dell.com": {
+    "name": "confluence-it-stage",
+    "url": "https://mcp.cec.delllabs.net/stage/confluence/it",
+    "pat_header": "X-Atlassian-Confluence-Personal-Token"
+  },
+  "https://jira.dell.com": {
+    "name": "jira-it",
+    "url": "https://mcp.cec.delllabs.net/jira/it",
+    "pat_header": "X-Atlassian-Jira-Personal-Token"
+  },
+  "https://confluence.dell.com": {
+    "name": "confluence-it",
+    "url": "https://mcp.cec.delllabs.net/confluence/it",
+    "pat_header": "X-Atlassian-Confluence-Personal-Token"
+  },
+  "https://gitlab.dell.com": {
+    "name": "gitlab",
+    "url": "https://gitlab.dell.com/api/v4/mcp"
+  },
+  "https://gitlab-nonprod.dell.com": {
+    "name": "gitlab-np",
+    "url": "https://gitlab-nonprod.dell.com/api/v4/mcp"
+  }
+}

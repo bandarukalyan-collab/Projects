@@ -1,0 +1,31 @@
+{
+  "hooks": {
+    "pre_user_prompt": [
+      {
+        "command": "powershell -ExecutionPolicy Bypass -NoProfile -File \"$env:USERPROFILE\\.codeium\\windsurf\\hooks\\hook_caller.ps1\" user-input"
+      }
+    ],
+    "pre_run_command": [
+      {
+        "command": "powershell -ExecutionPolicy Bypass -NoProfile -File \"$env:USERPROFILE\\.codeium\\windsurf\\hooks\\hook_caller.ps1\" run-command"
+      }
+    ],
+    "pre_mcp_tool_use": [
+      {
+        "command": "powershell -ExecutionPolicy Bypass -NoProfile -File \"$env:USERPROFILE\\.codeium\\windsurf\\hooks\\hook_caller.ps1\" mcp-request",
+        "show_output": true
+      }
+    ],
+    "post_mcp_tool_use": [
+      {
+        "command": "powershell -ExecutionPolicy Bypass -NoProfile -File \"$env:USERPROFILE\\.codeium\\windsurf\\hooks\\hook_caller.ps1\" mcp-response",
+        "show_output": true
+      }
+    ],
+    "post_cascade_response": [
+      {
+        "command": "powershell -ExecutionPolicy Bypass -NoProfile -File \"$env:USERPROFILE\\.codeium\\windsurf\\hooks\\hook_caller.ps1\" cascade-response"
+      }
+    ]
+  }
+}

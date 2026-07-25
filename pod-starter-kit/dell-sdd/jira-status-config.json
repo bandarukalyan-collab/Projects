@@ -1,0 +1,10 @@
+{
+  "jira_status_transitions": {
+    "new": "Proposed",
+    "create-spec": "Defining Details",
+    "create-plan": "Ready for Dev",
+    "execute": "In Development",
+    "wrap-up": "Complete"
+  },
+  "description": "Centralized JIRA status transition configuration for SDLC stages. This configuration maps each SDLC stage to its corresponding JIRA status name."
+}

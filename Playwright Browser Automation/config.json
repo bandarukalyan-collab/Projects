@@ -1,0 +1,10 @@
+{
+  "credentials": {
+    "saveCredentials": false,
+    "savePath": ".env.local"
+  },
+  "automation": {
+    "defaultDataSet": "Manufacturing (ODM) Production",
+    "targetDocumentTitle": "XML-LABEL DATA ATTACHMENT-V3-ODM"
+  }
+}

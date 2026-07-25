@@ -1,0 +1,345 @@
+Confluence will be temporarily offline for DR Compliance Testing on Tuesday, July 7 at 5:00 PM CDT. Please make sure all content is saved before this time.
+(IST: 3:30 AM – 7:30 AM Wed, July 8) | (GMT: 11:00 PM Tue, July 7 – 3:00 AM Wed, July 8)
+Skip to sidebar
+Skip to main content
+Skip to breadcrumbs
+Skip to search
+Linked Applications
+Confluence
+Spaces
+People
+Calendars
+Analytics
+Create
+Help
+1
+
+
+	
+Mavericks
+Pages
+Blog
+Calendars
+Analytics
+SPACE SHORTCUTS
+Product requirements
+File lists
+How-to articles
+Troubleshooting articles
+Meeting notes (2)
+UML Diagrams
+Jira reports
+Retrospectives
+PAGE TREE
+Priority Definitions & SLAs
+Abacus 2.0 Technical Document
+Maverick CTS Back-Office SRE
+CCT Compliance for Maverick
+Coexistence Placeholder
+DevOps Experience Home
+File lists
+How-to articles
+ITP Home
+Maverick Architecture
+Data Archive & Purge
+Horizontal - Data Conversion & Cutover
+Horizontal - Infrastructure
+Horizontal - ISG Incremental Architecture
+Horizontal - Security & Controls
+Horizontal - Site Reliability Engineering (SRE)
+ITP
+MTQ
+MTQ & OTDTC - Customer
+OTDTC
+PTA
+PTM
+RTR/TAX
+EFS
+Jira Activities
+Jira Project Migration
+Demo
+EFS links
+Helpful links
+Jira links
+Jira Master Filters
+Maverick projects separation
+Maverick Sprints FY25 & FY26 & FY27
+Quick Instruction
+RTR - Jira links
+RTR - Sub-Lifecyle & Application Mapping
+Jira Hygiene (EFS Teams)
+Jira Hygienes
+Defect
+RTR/TAX Architecture Flow
+RTR/TAX NFR
+RTR/TAX PAD
+RTR/TAX SAD
+RTR/TAX Supporting Documentation
+Sprint
+TAVOL Tracker
+STL
+STP
+TL
+Transition
+Brazil Commissioning :: Detailed Draft
+Maverick Integrated E2E (IE2E) Automation
+MAV QTO Customer Meeting records:
+Meeting notes (2)
+MTQ Home
+OIC Core Integration Home Page
+Product requirements
+Old Co to New Co Migration and Coexistence
+STP Home
+Subscription & Usage Billing Business Enablement
+Troubleshooting articles
+UML Diagrams
+V4 Configuration Engine
+BO SRE GEN-AI AO
+COE - DevPerfOps
+CFI Discovery Release Tracker
+Maverick Defects Rule Book
+EFS E2E Test team
+Maverick Splunk Observability
+FT2 DSA Customer Search CSR Maverick Documents
+FT2 Manage Account - Channel partner - Partner portal - DSC flow
+GAFT Maverick
+PTM_Planning
+Product Listing Page (PLP) - SHOP
+DXS
+STL - Home
+Maverick Observability
+Business Managed Applications FAQ - 1.0 CSG
+Offline and Online Configuration (v4-engine, csg, isg, complex configuration) reqs
+Toucans
+IT MW - MVK Integrations
+CSG Services Engineering
+FT RnD Ultron
+SCORE (Supply Chain SRE) - OTDTC, PTM, STP, STL
+TL Home
+RTS Metric (Under Construction)
+Jira reports
+MDP-PD API Interface
+Co-Existence Challanges for MAV Release
+How to Create store and Provide access to store From DSA
+Decision Tree model with 5 bins/labels.
+Enterprise Data Solutions (EDS)
+TBD-draft
+PSNT Component Flow
+Weekend Roster Dell & Deloitte - June 20, 2026
+MTQ - DADS
+Synchronization.
+Experiments Using Linear Regression models:
+Stores in Production
+Business Managed Applications FAQ - 1.1 ISG
+A11y reports for Nov 17 pipeline update - Mav Campaign
+Copy of A11y reports for Nov 17 pipeline update - Mav Tailored Templates
+Retrospectives
+ISG Franchise G4 environment Setup
+SPIL Clients Tracker
+CIE Observability & Monitoring
+CSG Block
+Catalog API Pull Flow
+CS Engagement Services (CS Core) Scenarios & Interface Updates
+Defect Management through Interim Prod to Prod Readiness for CSG 1.0
+Performance Tests - Guide document
+Pricing Scenarios Details:
+OCI Vault keys & secrets intake request tracking
+Vault Update for MVK For rotated passwords:
+Functional Test Case Flow
+Business Transformation Office BTO
+DSAflow
+Test Status Tracker
+PTM - Home
+Customer Home
+Price Validation
+Customer Information Card
+Cutover-Testing Summary(GE4)
+NPI
+PSDF
+API Analysis – Party & Customer (oldCo & newCo)
+PERF-HYD Applications Docs
+S&M Home
+Financing Customer Experience - Projects Assignment
+SDLC Test
+Infrastructure Home
+Intake Batch Processing
+SecAP - 2026
+Rack Integration - NCPL Ordering
+ConfigureSpace tools
+Pages
+…
+ Jira Activities
+Analytics
+ Edit
+ View inline comments
+ Save for later
+ Watch
+ Share
+RTR - Jira links
+Created by 
+ Lam, Linh, last updated by Beck, Daniel on Dec 05, 2025  2 minute read
+Team Sprint Velocity Dashboard - WIP (click here)
+Team (Module)	
+
+DD CPL
+
+(as of 12/5)
+
+	
+
+ Component 
+
+	Plan / Strucutre	Board/Board Filter	
+	Structure	RICE# Master Filter** (as of Dec 5, 2024)
+AP	Luciana Belleza	
+
+STP - AP
+
+STP-AP-CMK
+
+	MAV STP AP Advanced Roadmap (Plan)	
+	
+	
+	
+
+ARCS	
+
+Monika Lakha
+
+Kadir Ardic
+
+	RTR-ARCS	
+	
+	
+	
+	MAV_RTR_ARC_RICEF_Filter
+CHRM	Aline Pinto; Monika Lakha	RTR-CHRMS	
+	
+	
+	
+	MAV_RTR_CHRM_RICEF_Filter
+CM	Troy May	RTR - Cash Management (CM)	
+	
+	
+	
+	
+
+EDM	Pramod Chaly	RTR - EDM	
+	
+	
+	
+	MAV_RTR_EDM_RICEF_Filter
+EPMCS	Rajeev Kumar	
+	
+	
+	
+	
+	
+
+FA	
+
+Paula Eifert/
+
+ Sreelochana Mitta (Sreelu)
+
+	RTR - FA	Maverick: RTR_FA Plan	
+	
+	
+	
+
+FCC	Dash, Subrat Kumar	RTR - FCC	
+	
+	
+	
+	
+
+FDI	Brian Suter	
+	
+	
+	
+	
+	
+
+FLA	Graziela Molling	
+	
+	
+	
+	
+	MAV_RTR_FLA_RICEF_Filter
+GL	Cris Motta	
+
+RTR - General Ledger (GL)
+
+	
+
+MAV-RTR GL Plan
+
+MAV RTR GL AdvancedRoadmap Filter
+	
+
+* Story & Defect *
+
+MAV RTR GL DELL & DELOITTE- Board (Story & Defect)
+
+Filter - MAV RTR GL Dell Deloitte Stories Defect Board Velocity
+
+MAV RTR GL DELL - Board (Story & Defect)
+
+Filter - MAV RTR GL Dell Story Defect Board Velocity
+
+MAV RTR GL DELOITTE - Board (Story & Defect)
+
+Filter - MAV RTR GL Deloitte Story Defect Board Velocity
+
+* Epics*
+
+MAV RTR GL DELL & DELOITTE - Board (EPIC) 
+
+Filter - MAV RTR GL Dell Deloitte EPIC Board Velocity
+
+MAV RTR GL DELL - Board (EPIC)
+
+DELOITTE Filter - MAV RTR GL Dell EPIC Board Velocity
+
+MAV RTR GL DELOITTE - Board (EPIC)
+
+Filter - MAV RTR GL Deloitte EPIC Board Velocity
+
+	
+
+
+
+
+
+
+
+
+
+
+
+	MAV RTR GL Structure - Structure	MAV_RTR_GL_RICEF_Filter
+IC	Erin Lenhoff	
+	
+	
+	
+	
+	
+
+PPM ( Costing, PJM, Billing  )	Daniel Beck	RTR - Project_PPM	MAV RTR PPM MASTER PLAN	
+	
+	
+	MAV_RTR_PPM_RICEF_Filter
+RMCS	Nary Bainsal / Edward Warren	
+	
+	
+	
+	
+	MAV_RTR_RM_RICEF_Filter
+Like
+Be the first to like this
+No labels
+Edit Labels
+
+Write a comment...
+Powered by Atlassian Confluence 10.2.10 (CONPWS3CONFLU01: 49d33501) Report a bug Atlassian News
+Atlassian

@@ -1,0 +1,31 @@
+{
+  "hooks": {
+    "pre_user_prompt": [
+      {
+        "command": "bash $HOME/.codeium/windsurf/hooks/hook_caller.sh user-input"
+      }
+    ],
+    "pre_run_command": [
+      {
+        "command": "bash $HOME/.codeium/windsurf/hooks/hook_caller.sh run-command"
+      }
+    ],
+    "pre_mcp_tool_use": [
+      {
+        "command": "bash $HOME/.codeium/windsurf/hooks/hook_caller.sh mcp-request",
+        "show_output": true
+      }
+    ],
+    "post_mcp_tool_use": [
+      {
+        "command": "bash $HOME/.codeium/windsurf/hooks/hook_caller.sh mcp-response",
+        "show_output": true
+      }
+    ],
+    "post_cascade_response": [
+      {
+        "command": "bash $HOME/.codeium/windsurf/hooks/hook_caller.sh cascade-response"
+      }
+    ]
+  }
+}

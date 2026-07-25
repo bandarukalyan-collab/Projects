@@ -1,0 +1,16 @@
+{
+  "name": "playwright-browser-automation",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Recovered Playwright browser automation for Dell Document Search.",
+  "scripts": {
+    "start": "node dell-search.js",
+    "check": "node --check dell-search.js",
+    "web-ui": "node web-ui.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.22.2",
+    "playwright": "^1.59.1"
+  }
+}
