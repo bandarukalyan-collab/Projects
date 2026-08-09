@@ -1,4 +1,4 @@
-const { chromium } = require("playwright");
+﻿const { chromium } = require("playwright");
 const path = require("path");
 
 function getArg(name, fallback = "") {
@@ -21,19 +21,16 @@ async function waitForOutgoingMessageToSync(page, message) {
   await page.waitForFunction(
     (text) => {
       const outgoingMessages = [...document.querySelectorAll('[class*="message-out"]')];
-      const messageNode = outgoingMessages.reverse().find((node) => node.innerText.includes(text));
-
-      if (!messageNode) return false;
-
-      const pendingIcons = messageNode.querySelectorAll(
-        '[data-icon="msg-time"], [data-icon="status-time"], [aria-label*="pending" i], [aria-label*="waiting" i]'
-      );
-
-      return pendingIcons.length === 0;
+      return outgoingMessages.reverse().some((node) => node.innerText.includes(text));
     },
     snippet,
-    { timeout: 120000 }
+    { timeout: 30000 }
   );
+
+  // Give WhatsApp Web time to move the clicked message out of local pending
+  // state. Avoid retrying after the send button was already clicked, since
+  // retries can duplicate the message in the target group.
+  await page.waitForTimeout(45000);
 }
 
 async function waitForWhatsAppReady({ page, readyLocator, qrCanvas, screenshotPath, startedAt }) {
@@ -186,3 +183,4 @@ main().catch((error) => {
   console.error(error.message);
   process.exit(1);
 });
+
