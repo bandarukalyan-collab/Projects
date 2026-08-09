@@ -75,7 +75,7 @@ async function sendToChat({ chatName, message, noSend = false, attempt = 1 }) {
     executablePath: config.chromePath,
     headless: false,
     viewport: null,
-    args: ["--start-maximized"],
+    args: ["--start-maximized", "--disable-quic"],
   });
 
   try {
