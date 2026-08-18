@@ -65,61 +65,75 @@ client.on('ready', () => {
 });
 
 // Handle incoming messages
-client.on('message_create', async (msg) => {
-    console.log('Message create event fired');
+const processedMessageIds = new Set();
+client.on('message_create', (msg) => processMessage(msg, 'message_create'));
+client.on('message', (msg) => processMessage(msg, 'message'));
+
+async function processMessage(msg, eventName) {
+    const messageId = msg.id?._serialized || `${eventName}:${msg.from}:${msg.to}:${msg.timestamp}:${msg.body}`;
+    if (processedMessageIds.has(messageId)) {
+        return;
+    }
+    processedMessageIds.add(messageId);
+    if (processedMessageIds.size > 500) {
+        processedMessageIds.clear();
+    }
+
+    console.log(`${eventName} event fired`);
     console.log('Message body:', msg.body);
     console.log('Message from:', msg.from);
     console.log('Message to:', msg.to);
     
-    // Ignore messages from the bot itself
-    if (msg.fromMe) {
-        console.log('Message from bot itself, ignoring');
+    // Allow commands typed from the linked WhatsApp account, but avoid treating
+    // the bot's own quiz/result messages as answers.
+    if (msg.fromMe && !msg.body.trim().startsWith('!')) {
+        console.log('Non-command message from bot itself, ignoring');
         return;
     }
     
-    const chat = await msg.getChat();
-    console.log('Is group:', chat.isGroup);
-    
-    // Only process messages from groups
-    if (chat.isGroup) {
-        const text = msg.body.trim();
-        const groupId = chat.id._serialized;
-        console.log('Group ID:', groupId);
-        console.log('Message text:', text);
-        
-        // Handle commands
-        if (text.startsWith('!')) {
-            console.log('Command detected:', text);
-            await handleCommand(msg, text, groupId);
-            return;
-        }
-        
-        // Check if it's an answer (A, B, C, or D)
-        const answer = text.toUpperCase();
-        if (['A', 'B', 'C', 'D'].includes(answer)) {
-            console.log('Answer detected:', answer);
-            await handleAnswer(msg, answer, groupId);
-        }
+    const text = msg.body.trim();
+    const groupId = [msg.to, msg.from].find((id) => id && id.endsWith('@g.us'));
+    if (!groupId) {
+        console.log('Not a group message, ignoring');
+        return;
     }
-});
+
+    console.log('Is group:', true);
+    console.log('Group ID:', groupId);
+    console.log('Message text:', text);
+
+    // Handle commands
+    if (text.startsWith('!')) {
+        console.log('Command detected:', text);
+        await handleCommand(msg, text, groupId);
+        return;
+    }
+
+    // Check if it's an answer (A, B, C, or D)
+    const answer = text.toUpperCase();
+    if (['A', 'B', 'C', 'D'].includes(answer)) {
+        console.log('Answer detected:', answer);
+        await handleAnswer(msg, answer, groupId);
+    }
+}
 
 // Handle commands
 async function handleCommand(msg, command, groupId) {
-    const contact = await msg.getContact();
-    const userName = contact.pushname || contact.number;
-    
-    switch (command.toLowerCase()) {
+    const normalizedCommand = command.trim().toLowerCase().replace(/[\u200e\u200f\u202a-\u202e]/g, '');
+    switch (normalizedCommand) {
         case '!quiz':
             await sendQuiz(groupId);
             break;
         case '!leaderboard':
             await showLeaderboard(msg);
             break;
-        case '!score':
+        case '!score': {
+            const contact = await msg.getContact();
             await showUserScore(msg, contact.number);
             break;
+        }
         default:
-            // Unknown command
+            console.log('Unknown command:', normalizedCommand);
             break;
     }
 }
